@@ -42,7 +42,7 @@ if (empty($bookings)) { $bookings = []; }
   --text-dark:#1e1a14;--text-mid:#4a3f30;--gold:#c8a96e;
   --row-even:#d8ccb4;--row-odd:#cfc3aa;
 }
-body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-direction:column;height:100vh;overflow:hidden;color:var(--text-dark);}
+body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-direction:column;min-height:100vh;color:var(--text-dark);}
 .topnav{background:var(--dark);display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 16px;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.4);}
 .topnav-left{display:flex;align-items:center;gap:14px;}
 .logo-circle{width:44px;height:44px;border-radius:50%;border:2px solid var(--gold);background:var(--darker);display:flex;align-items:center;justify-content:center;font-size:18px;}
@@ -50,7 +50,7 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .topnav-right{display:flex;align-items:center;gap:12px;}
 .user-label{font-size:14px;color:var(--cream);font-weight:300;}
 .user-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.12);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;color:var(--cream);font-size:18px;}
-.layout{display:flex;flex:1;overflow:hidden;}
+.layout{display:flex;flex:1;}
 .sidebar{width:68px;background:var(--darker);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:4px;flex-shrink:0;border-right:1px solid rgba(255,255,255,0.05);z-index:10;}
 .nav-item{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:20px;cursor:pointer;text-decoration:none;transition:background .2s,color .2s;position:relative;}
 .nav-item:hover{background:rgba(255,255,255,0.08);color:var(--cream);}
@@ -58,7 +58,7 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .nav-item .tip{position:absolute;left:58px;background:var(--dark);color:var(--cream);font-size:11px;padding:4px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;border:1px solid rgba(255,255,255,0.1);z-index:200;}
 .nav-item:hover .tip{opacity:1;}
 .nav-spacer{flex:1;}
-.main{flex:1;padding:28px;display:flex;flex-direction:column;gap:20px;overflow:hidden;animation:fadeUp .5s ease both;}
+.main{flex:1;padding:28px;display:flex;flex-direction:column;gap:20px;animation:fadeUp .5s ease both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .page-header{display:flex;align-items:center;justify-content:space-between;}
 .page-title{font-family:'Playfair Display',serif;font-size:30px;color:var(--text-dark);}
@@ -76,8 +76,9 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .icon-btn:hover{background:rgba(255,255,255,0.7);}
 .tbl-wrap{overflow:visible;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
-thead tr{border-bottom:2px solid rgba(0,0,0,0.15);}
-thead th{text-align:left;padding:10px 16px;color:var(--text-mid);font-size:12px;letter-spacing:.6px;text-transform:uppercase;font-weight:700;}
+thead tr{position:sticky;top:0;z-index:5;background:var(--card-bg);border-bottom:2px solid rgba(0,0,0,0.15);}
+thead th{text-align:left;padding:10px 16px;color:var(--text-mid);font-size:12px;letter-spacing:.6px;text-transform:uppercase;font-weight:700;background:var(--card-bg);}
+#tableCard{}
 tbody tr:nth-child(odd){background:var(--row-odd);}
 tbody tr:nth-child(even){background:var(--row-even);}
 tbody tr{transition:background .15s;}
@@ -111,6 +112,8 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .btn-primary:hover{background:#3a3020;}
 .btn-secondary{background:rgba(0,0,0,0.1);color:var(--text-dark);}
 .error-msg{color:#c0392b;font-size:12px;min-height:16px;margin-bottom:8px;}
+#deleteModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;}
+#deleteModal.active{display:flex;}
 .del-box{background:var(--card-bg);border-radius:18px;padding:32px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);max-width:320px;width:90%;animation:popIn .22s ease both;}
 .del-icon{font-size:42px;margin-bottom:14px;}
 .del-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--text-dark);margin-bottom:8px;}
@@ -127,6 +130,7 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .pg-btn:disabled{opacity:.4;cursor:not-allowed;}
 .pg-btn.pg-active{background:var(--dark);color:var(--cream);border-color:transparent;}
 .pg-ellipsis{padding:0 4px;color:var(--muted);font-size:13px;line-height:1;display:inline-flex;align-items:center;}
+#bellPopup{display:none;position:fixed;bottom:24px;right:24px;width:320px;background:#1e1a14;border-radius:12px;border:1px solid rgba(240,192,64,0.3);box-shadow:0 8px 32px rgba(0,0,0,0.55);z-index:99999;overflow:hidden;color:#f5eedc;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -135,40 +139,58 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .bp-item:last-child{border-bottom:none;}
 .bp-item-title{font-weight:700;color:#f0c040;margin-bottom:3px;}
 .bp-item-msg{color:rgba(255,255,255,0.6);line-height:1.4;}
+.hamburger{display:none;background:none;border:none;color:var(--cream);font-size:22px;cursor:pointer;padding:6px 10px;border-radius:8px;line-height:1;align-items:center;justify-content:center;}
+.hamburger:hover{background:rgba(255,255,255,0.12);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:150;}
+.sidebar-overlay.active{display:block;}
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--darker);border-top:1px solid rgba(255,255,255,0.08);z-index:120;align-items:stretch;justify-content:space-around;}
+.mn-item{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:var(--muted);text-decoration:none;font-size:10px;gap:3px;padding:6px 4px;transition:color .2s;}
+.mn-item span:first-child{font-size:20px;}
+.mn-item.active,.mn-item:hover{color:var(--gold);}
 </style>
 <style id="responsive-overrides">
 @media (max-width:900px){
   .stat-grid{grid-template-columns:repeat(2,1fr)!important;}
-  .mid-row{grid-template-columns:1fr!important;overflow-y:auto;}
-  .bottom-row{grid-template-columns:1fr!important;overflow-y:auto;}
+  .mid-row{grid-template-columns:1fr!important;}
+  .bottom-row{grid-template-columns:1fr!important;}
   .main{overflow-y:auto!important;padding:16px!important;}
   .layout{overflow-y:auto!important;}
   body{height:auto!important;overflow:auto!important;}
 }
 @media (max-width:768px){
-  .sidebar{width:52px!important;}
-  .topnav{padding:0 12px 0 10px!important;}
+  .hamburger{display:flex!important;}
+  .sidebar{position:fixed!important;left:0!important;top:64px!important;height:calc(100vh - 64px)!important;z-index:200!important;transform:translateX(-100%)!important;width:220px!important;transition:transform .25s ease!important;border-right:1px solid rgba(255,255,255,0.08)!important;}
+  .sidebar.open{transform:translateX(0)!important;}
+  .topnav{padding:0 16px 0 12px!important;}
   .brand{font-size:16px!important;}
+  .user-label{display:none!important;}
   .page-title{font-size:22px!important;}
-  .stat-value{font-size:26px!important;}
   .card,.widget,.bottom-widget{padding:14px!important;border-radius:10px!important;}
   .tbl-wrap{overflow-x:auto!important;}
-  table{min-width:600px!important;}
-  .toolbar{flex-direction:column!important;align-items:flex-start!important;}
-  .tabs{width:100%!important;}
-  .toolbar-right{width:100%!important;justify-content:flex-end!important;}
+  table{min-width:560px!important;}
+  .toolbar{flex-direction:column!important;align-items:flex-start!important;gap:8px!important;}
+  .tabs{width:100%!important;overflow-x:auto!important;}
+  .toolbar-right{width:100%!important;justify-content:space-between!important;}
+  .search-wrap input{width:100px!important;}
+  .modal-overlay > *{width:94vw!important;max-height:88vh!important;overflow-y:auto!important;}
 }
 @media (max-width:480px){
   .stat-grid{grid-template-columns:1fr!important;}
+  .hamburger{display:flex!important;}
   .sidebar{display:none!important;}
-  .main{padding:12px!important;}
-  .topnav{height:54px!important;}
+  .sidebar-overlay{display:none!important;}
+  .mobile-nav{display:flex!important;}
+  body{padding-bottom:62px!important;}
+  .main{padding:10px!important;}
+  .topnav{height:54px!important;padding:0 10px!important;}
   .brand{font-size:15px!important;}
-  .logo-circle{width:36px!important;height:36px!important;}
-  .page-title{font-size:20px!important;}
-  .stat-value{font-size:22px!important;}
-  .stat-card{padding:14px 16px!important;}
+  .logo-circle{width:36px!important;height:36px!important;font-size:15px!important;}
+  .page-title{font-size:19px!important;}
+  .page-header{flex-wrap:wrap!important;gap:4px!important;}
+  .page-time{font-size:11px!important;}
   .tab-btn{padding:6px 10px!important;font-size:12px!important;}
+  .tx-stat,.sum-card{min-width:120px!important;}
+  table{min-width:480px!important;}
 }
 </style>
 </head>
@@ -179,6 +201,7 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
     <div class="logo-circle" style="overflow:hidden;padding:0;"><img src="../img/logo.png" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;"/></div>
     <span class="brand">Brew n' Break</span>
   </div>
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
   <div class="topnav-right">
     <span class="user-label"><?= htmlspecialchars($username) ?></span>
     <div style="position:relative;">
@@ -192,6 +215,7 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 </nav>
 
 <div class="layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
   <aside class="sidebar">
     <?php $sp=$userRole==='Staff'?'staff.php':''; ?>
     <a class="nav-item" href="<?=$sp?:'dashboard.php'?>"><span>🏠</span><span class="tip">Dashboard</span></a>
@@ -212,7 +236,7 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
       <div class="page-time">🕐 <span id="liveClock"></span></div>
     </div>
 
-    <div class="card">
+    <div class="card" id="tableCard">
       <div class="toolbar">
         <div style="display:flex;align-items:center;gap:10px;">
           <span style="font-family:'Playfair Display',serif;font-size:16px;color:var(--text-dark);font-weight:700;">🏠 Airbnb</span>
@@ -279,7 +303,7 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
       </div>
 
       <!-- Pagination -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;flex-shrink:0;">
         <div id="pageInfo" style="font-size:12px;color:var(--muted);"></div>
         <div id="pageControls" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;"></div>
       </div>
@@ -364,6 +388,13 @@ function updateClock(){
     now.toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'});
 }
 updateClock(); setInterval(updateClock,1000);
+function toggleSidebar(){
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  if(!sb||!ov) return;
+  sb.classList.toggle('open');
+  ov.classList.toggle('active');
+}
 
 const PER_PAGE = 13;
 let currentPage = 1;
@@ -504,6 +535,13 @@ applySearch();
     </div>
   </div>
 </div>
+<nav class="mobile-nav" id="mobileNav">
+  <a href="/brew-n-break-pos/dashboard.php" class="mn-item"><span>🏠</span><span>Home</span></a>
+  <a href="/brew-n-break-pos/menu.php" class="mn-item"><span>☕</span><span>Cafe</span></a>
+  <a href="/brew-n-break-pos/billiard.php" class="mn-item"><span>🎱</span><span>Billiard</span></a>
+  <a href="/brew-n-break-pos/transactions.php" class="mn-item"><span>📋</span><span>Transactions</span></a>
+  <a href="/brew-n-break-pos/bookings.php" class="mn-item active"><span>📅</span><span>Bookings</span></a>
+</nav>
 <div id="bellPopup">
   <div class="bp-header">
     <span class="bp-title">⚠️ Session Expiring Soon</span>

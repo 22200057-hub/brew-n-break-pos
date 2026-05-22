@@ -64,8 +64,8 @@ try {
     if (in_array($type, ['Transaction Report','Daily Report','Booking Report','Revenue Report'])) {
         $r = $conn->query("
             SELECT b.booking_code AS code,
-                   CONCAT(b.room, ' — ', b.guest_name) AS product,
-                   'Booking' AS type, 0 AS amount, b.status,
+                   CONCAT(b.room, ' — ', b.guest_name, ' (', b.check_in, ' to ', b.check_out, ', ', DATEDIFF(b.check_out,b.check_in), ' night', IF(DATEDIFF(b.check_out,b.check_in)=1,'','s'), ')') AS product,
+                   'Booking' AS type, DATEDIFF(b.check_out, b.check_in) * 3500 AS amount, b.status,
                    DATE_FORMAT(b.created_at,'%h:%i %p · %M %d, %Y') AS date
             FROM bookings b
             WHERE DATE(b.created_at) BETWEEN '$start' AND '$end'

@@ -53,7 +53,7 @@ if (empty($products)) {
   --row-even:#d8ccb4;--row-odd:#cfc3aa;
   --green:#3a6b4a;
 }
-body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-direction:column;min-height:100vh;color:var(--text-dark);}
+body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-direction:column;height:100vh;overflow:hidden;color:var(--text-dark);}
 .topnav{background:var(--dark);display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 16px;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.4);}
 .topnav-left{display:flex;align-items:center;gap:14px;}
 .logo-circle{width:44px;height:44px;border-radius:50%;border:2px solid var(--gold);background:var(--darker);display:flex;align-items:center;justify-content:center;font-size:18px;}
@@ -61,7 +61,7 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .topnav-right{display:flex;align-items:center;gap:12px;}
 .user-label{font-size:14px;color:var(--cream);font-weight:300;}
 .user-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.12);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;color:var(--cream);font-size:18px;}
-.layout{display:flex;flex:1;}
+.layout{display:flex;flex:1;overflow:hidden;}
 .sidebar{width:68px;background:var(--darker);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:4px;flex-shrink:0;border-right:1px solid rgba(255,255,255,0.05);z-index:10;}
 .nav-item{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:20px;cursor:pointer;text-decoration:none;transition:background .2s,color .2s;position:relative;}
 .nav-item:hover{background:rgba(255,255,255,0.08);color:var(--cream);}
@@ -69,7 +69,7 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .nav-item .tip{position:absolute;left:58px;background:var(--dark);color:var(--cream);font-size:11px;padding:4px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;border:1px solid rgba(255,255,255,0.1);z-index:200;}
 .nav-item:hover .tip{opacity:1;}
 .nav-spacer{flex:1;}
-.main{flex:1;padding:28px;display:flex;flex-direction:column;gap:20px;animation:fadeUp .5s ease both;}
+.main{flex:1;padding:28px;display:flex;flex-direction:column;gap:20px;overflow:hidden;animation:fadeUp .5s ease both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .page-header{display:flex;align-items:center;justify-content:space-between;}
 .page-title{font-family:'Playfair Display',serif;font-size:30px;color:var(--text-dark);}
@@ -86,6 +86,8 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:background .2s;}
 .icon-btn:hover{background:rgba(255,255,255,0.7);}
 
+#tableCard{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
+#productScrollArea{flex:1;overflow-y:auto;min-height:0;padding-bottom:4px;}
 .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
 .product-card{background:rgba(255,255,255,0.45);border-radius:12px;padding:16px;border:1px solid rgba(0,0,0,0.08);transition:box-shadow .2s,transform .15s;position:relative;}
 .product-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.12);transform:translateY(-2px);}
@@ -141,6 +143,12 @@ tbody td{padding:10px 16px;}
 .btn-secondary{background:rgba(0,0,0,0.1);color:var(--text-dark);}
 .error-msg{color:#c0392b;font-size:12px;min-height:14px;margin-bottom:8px;}
 .empty-state{text-align:center;padding:40px;color:var(--muted);font-size:14px;}
+.pg-btn{padding:5px 11px;border-radius:7px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.4);cursor:pointer;font-size:13px;font-family:'Lato',sans-serif;font-weight:700;color:var(--text-dark);transition:background .2s;min-width:34px;}
+.pg-btn:hover:not(:disabled){background:rgba(255,255,255,0.7);}
+.pg-btn:disabled{opacity:.4;cursor:not-allowed;}
+.pg-btn.pg-active{background:var(--dark);color:var(--cream);border-color:transparent;}
+.pg-ellipsis{padding:0 4px;color:var(--muted);font-size:13px;line-height:1;display:inline-flex;align-items:center;}
+#bellPopup{display:none;position:fixed;bottom:24px;right:24px;width:320px;background:#1e1a14;border-radius:12px;border:1px solid rgba(240,192,64,0.3);box-shadow:0 8px 32px rgba(0,0,0,0.55);z-index:99999;overflow:hidden;color:#f5eedc;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -231,7 +239,7 @@ tbody td{padding:10px 16px;}
       <a href="<?= $sp ? $sp.'/menu' : 'menu.php' ?>" style="font-size:13px;color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:8px;background:rgba(0,0,0,0.08);">← Back to Orders</a>
     </div>
 
-    <div class="card">
+    <div class="card" id="tableCard">
       <div class="toolbar">
         <div class="tabs">
           <button class="tab-btn active" onclick="filterCat('all',this)">All</button>
@@ -251,6 +259,7 @@ tbody td{padding:10px 16px;}
         </div>
       </div>
 
+      <div id="productScrollArea">
       <!-- Grid View -->
       <div class="product-grid" id="productGrid">
         <?php foreach ($products as $p): ?>
@@ -282,7 +291,7 @@ tbody td{padding:10px 16px;}
       <div class="tbl-wrap" id="productList">
         <table>
           <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Status</th><th>Action</th></tr></thead>
-          <tbody>
+          <tbody id="productListBody">
             <?php foreach ($products as $p): ?>
             <tr data-cat="<?= strtolower(htmlspecialchars($p['category'])) ?>"
                 data-name="<?= strtolower(htmlspecialchars($p['name'])) ?>">
@@ -298,6 +307,13 @@ tbody td{padding:10px 16px;}
             <?php endforeach; ?>
           </tbody>
         </table>
+      </div>
+      </div><!-- /#productScrollArea -->
+
+      <!-- Pagination -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;flex-shrink:0;">
+        <div id="pageInfo" style="font-size:12px;color:var(--muted);"></div>
+        <div id="pageControls" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;"></div>
       </div>
     </div>
   </main>
@@ -359,12 +375,17 @@ function updateClock(){
 }
 updateClock(); setInterval(updateClock,1000);
 let currentView='grid';
+const PER_PAGE_GRID=12, PER_PAGE_LIST=13;
+let currentPage=1;
+let _filteredItems=[];
+
 function setView(v){
   currentView=v;
   document.getElementById('productGrid').style.display = v==='grid'?'':'none';
   document.getElementById('productList').style.display = v==='list'?'block':'none';
   document.getElementById('gridViewBtn').classList.toggle('active',v==='grid');
   document.getElementById('listViewBtn').classList.toggle('active',v==='list');
+  applyFilters();
 }
 let currentCat='all';
 function filterCat(cat,btn){
@@ -375,11 +396,61 @@ function filterCat(cat,btn){
 }
 function applyFilters(){
   const q=document.getElementById('searchInput').value.toLowerCase();
-  document.querySelectorAll('.product-card,[data-cat]').forEach(el=>{
-    const matchCat=currentCat==='all'||el.dataset.cat===currentCat;
-    const matchSearch=!q||el.dataset.name.includes(q);
-    el.style.display=(matchCat&&matchSearch)?'':'none';
-  });
+  _filteredItems=[];
+  if(currentView==='grid'){
+    document.querySelectorAll('.product-card').forEach(el=>{
+      const matchCat=currentCat==='all'||el.dataset.cat===currentCat;
+      const matchSearch=!q||el.dataset.name.includes(q);
+      el.style.display='none';
+      if(matchCat&&matchSearch) _filteredItems.push(el);
+    });
+  } else {
+    document.querySelectorAll('#productListBody tr').forEach(el=>{
+      const matchCat=currentCat==='all'||el.dataset.cat===currentCat;
+      const matchSearch=!q||el.dataset.name.includes(q);
+      el.style.display='none';
+      if(matchCat&&matchSearch) _filteredItems.push(el);
+    });
+  }
+  currentPage=1;
+  renderPage();
+  renderPagination();
+}
+function renderPage(){
+  const perPage=currentView==='grid'?PER_PAGE_GRID:PER_PAGE_LIST;
+  const start=(currentPage-1)*perPage, end=start+perPage;
+  if(currentView==='grid') document.querySelectorAll('.product-card').forEach(el=>el.style.display='none');
+  else document.querySelectorAll('#productListBody tr').forEach(el=>el.style.display='none');
+  _filteredItems.forEach((el,i)=>{ el.style.display=(i>=start&&i<end)?'':'none'; });
+  const total=_filteredItems.length;
+  const info=document.getElementById('pageInfo');
+  if(total===0){ info.textContent='No products found'; }
+  else { info.textContent='Showing '+(start+1)+'–'+Math.min(end,total)+' of '+total+' products'; }
+}
+function renderPagination(){
+  const perPage=currentView==='grid'?PER_PAGE_GRID:PER_PAGE_LIST;
+  const total=_filteredItems.length;
+  const pages=Math.ceil(total/perPage);
+  const ctrl=document.getElementById('pageControls');
+  if(pages<=1){ ctrl.innerHTML=''; return; }
+  let html=`<button class="pg-btn" onclick="goToPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  for(let i=1;i<=pages;i++){
+    if(i===1||i===pages||(i>=currentPage-2&&i<=currentPage+2)){
+      html+=`<button class="pg-btn${i===currentPage?' pg-active':''}" onclick="goToPage(${i})">${i}</button>`;
+    } else if(i===currentPage-3||i===currentPage+3){
+      html+=`<span class="pg-ellipsis">…</span>`;
+    }
+  }
+  html+=`<button class="pg-btn" onclick="goToPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>›</button>`;
+  ctrl.innerHTML=html;
+}
+function goToPage(n){
+  const perPage=currentView==='grid'?PER_PAGE_GRID:PER_PAGE_LIST;
+  const pages=Math.ceil(_filteredItems.length/perPage);
+  if(n<1||n>pages) return;
+  currentPage=n;
+  renderPage();
+  renderPagination();
 }
 function openModal(){
   document.getElementById('modalTitle').textContent='Add Product';
@@ -430,6 +501,7 @@ async function deleteProduct(id){
   if(data.success) location.reload();
   else alert(data.message||'Delete failed.');
 }
+applyFilters();
 </script>
 <div id="bellPopup">
   <div class="bp-header">

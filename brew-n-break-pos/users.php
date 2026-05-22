@@ -42,7 +42,7 @@ if (empty($users)) { $users = []; }
   --text-dark:#1e1a14;--text-mid:#4a3f30;--gold:#c8a96e;
   --row-even:#d8ccb4;--row-odd:#cfc3aa;
 }
-body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-direction:column;height:100vh;overflow:hidden;color:var(--text-dark);}
+body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-direction:column;min-height:100vh;color:var(--text-dark);}
 
 .topnav{background:var(--dark);display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 16px;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.4);}
 .topnav-left{display:flex;align-items:center;gap:14px;}
@@ -52,7 +52,7 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .user-label{font-size:14px;color:var(--cream);font-weight:300;}
 .user-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.12);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;color:var(--cream);font-size:18px;}
 
-.layout{display:flex;flex:1;overflow:hidden;}
+.layout{display:flex;flex:1;}
 
 .sidebar{width:68px;background:var(--darker);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:4px;flex-shrink:0;border-right:1px solid rgba(255,255,255,0.05);z-index:10;}
 .nav-item{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:20px;cursor:pointer;text-decoration:none;transition:background .2s,color .2s;position:relative;}
@@ -62,7 +62,7 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .nav-item:hover .tip{opacity:1;}
 .nav-spacer{flex:1;}
 
-.main{flex:1;padding:28px;display:flex;flex-direction:column;gap:20px;overflow:hidden;animation:fadeUp .5s ease both;}
+.main{flex:1;padding:28px;display:flex;flex-direction:column;gap:20px;animation:fadeUp .5s ease both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
 .page-header{display:flex;align-items:center;justify-content:space-between;}
@@ -84,8 +84,9 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 
 .tbl-wrap{overflow:visible;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
-thead tr{border-bottom:2px solid rgba(0,0,0,0.15);}
-thead th{text-align:left;padding:10px 16px;color:var(--text-mid);font-size:12px;letter-spacing:.6px;text-transform:uppercase;font-weight:700;}
+thead tr{position:sticky;top:0;z-index:5;background:var(--card-bg);border-bottom:2px solid rgba(0,0,0,0.15);}
+thead th{text-align:left;padding:10px 16px;color:var(--text-mid);font-size:12px;letter-spacing:.6px;text-transform:uppercase;font-weight:700;background:var(--card-bg);}
+#tableCard{}
 tbody tr:nth-child(odd) {background:var(--row-odd);}
 tbody tr:nth-child(even){background:var(--row-even);}
 tbody tr{transition:background .15s;}
@@ -138,6 +139,7 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .pg-btn:disabled{opacity:.4;cursor:not-allowed;}
 .pg-btn.pg-active{background:var(--dark);color:var(--cream);border-color:transparent;}
 .pg-ellipsis{padding:0 4px;color:var(--muted);font-size:13px;line-height:1;display:inline-flex;align-items:center;}
+#bellPopup{display:none;position:fixed;bottom:24px;right:24px;width:320px;background:#1e1a14;border-radius:12px;border:1px solid rgba(240,192,64,0.3);box-shadow:0 8px 32px rgba(0,0,0,0.55);z-index:99999;overflow:hidden;color:#f5eedc;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -222,7 +224,7 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
       <div class="page-time">🕐 <span id="liveClock"></span></div>
     </div>
 
-    <div class="card">
+    <div class="card" id="tableCard">
       <!-- Toolbar -->
       <div class="toolbar">
         <div class="tabs">
@@ -282,7 +284,7 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
       </div>
 
       <!-- Pagination -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;flex-shrink:0;">
         <div id="pageInfo" style="font-size:12px;color:var(--muted);"></div>
         <div id="pageControls" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;"></div>
       </div>

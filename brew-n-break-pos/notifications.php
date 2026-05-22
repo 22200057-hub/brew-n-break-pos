@@ -198,6 +198,7 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .toast-title{font-weight:700;font-size:13px;margin-bottom:4px;}
 .toast-msg{font-size:12px;color:rgba(255,255,255,0.7);}
 .toast-close{position:absolute;top:10px;right:12px;background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:16px;line-height:1;}
+#bellPopup{display:none;position:fixed;bottom:24px;right:24px;width:320px;background:#1e1a14;border-radius:12px;border:1px solid rgba(240,192,64,0.3);box-shadow:0 8px 32px rgba(0,0,0,0.55);z-index:99999;overflow:hidden;color:#f5eedc;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}

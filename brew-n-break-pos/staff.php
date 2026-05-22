@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 require_once __DIR__.'/auth.php';
 error_reporting(0);
@@ -32,7 +32,7 @@ try {
         $r = $conn->query("SELECT COUNT(*) FROM orders WHERE DATE(created_at)=CURDATE()"); if ($r) $totalOrders = $r->fetch_row()[0];
         $r = $conn->query("SELECT COALESCE(SUM(TIME_TO_SEC(TIMEDIFF(end_time,start_time))/3600),0) FROM billiard_sessions WHERE DATE(created_at)=CURDATE() AND status IN ('Done','Ongoing','Start')"); if ($r) $totalHours = round($r->fetch_row()[0], 1);
         $r = $conn->query("SELECT COUNT(*) FROM bookings WHERE DATE(created_at)=CURDATE()"); if ($r) $totalBookings = $r->fetch_row()[0];
-        $r = $conn->query("SELECT COALESCE(SUM(total_amount),0) FROM orders WHERE DATE(created_at)=CURDATE()"); if ($r) $totalRevenue = $r->fetch_row()[0];
+        $r = $conn->query("SELECT COALESCE((SELECT SUM(total_amount) FROM orders WHERE DATE(created_at)=CURDATE()),0) + COALESCE((SELECT SUM(amount) FROM billiard_sessions WHERE DATE(created_at)=CURDATE()),0) + COALESCE((SELECT SUM(DATEDIFF(check_out,check_in)*3500) FROM bookings WHERE DATE(created_at)=CURDATE()),0) AS total"); if ($r) $totalRevenue = $r->fetch_row()[0];
         $yesterday = date('Y-m-d', strtotime('-1 day'));
         $chk = $conn->query("SELECT id FROM reports WHERE type='Daily Report' AND date_from='$yesterday' LIMIT 1");
         if ($chk && $chk->num_rows === 0) {
@@ -223,6 +223,7 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .sched-pending  {background:#fff3cd;color:#856404;}
 .sched-done     {background:#e2e3e5;color:#4a4e54;}
 .sched-empty{text-align:center;padding:24px 0;color:var(--muted);font-size:12px;font-style:italic;}
+#bellPopup{display:none;position:fixed;bottom:24px;right:24px;width:320px;background:#1e1a14;border-radius:12px;border:1px solid rgba(240,192,64,0.3);box-shadow:0 8px 32px rgba(0,0,0,0.55);z-index:99999;overflow:hidden;color:#f5eedc;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -374,15 +375,13 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
             }
 
             function fetchTables() {
-              fetch('/brew-n-break-pos/billiard_status.php')
-                .then(res => res.json())
-                .then(data => {
-                  if (data.success) {
-                    setTables(data.tables);
-                    setLastUpdated(new Date());
-                  }
-                })
-                .catch(() => {});
+              const update = data => { if(data.success && data.tables){ setTables(data.tables); setLastUpdated(new Date()); } };
+              fetch('http://localhost:5000/api/billiard-status')
+                .then(res => res.json()).then(update)
+                .catch(() => {
+                  fetch('/brew-n-break-pos/billiard_status.php')
+                    .then(res => res.json()).then(update).catch(()=>{});
+                });
             }
 
             useEffect(() => {
@@ -503,31 +502,32 @@ function tickCountdowns(){
   });
 }
 setInterval(tickCountdowns, 1000);
+const badgeClass = s => { const sl=s.toLowerCase(); if(sl==='reserved') return 'badge-reserved'; if(sl==='occupied'||sl==='ongoing'||sl==='start') return 'badge-occupied'; return 'badge-available'; };
+const displayStatus = s => { const sl=s.toLowerCase(); return (sl==='ongoing'||sl==='start')?'Occupied':s.charAt(0).toUpperCase()+s.slice(1); };
+function applyBilliardRows(tables) {
+  const tbody = document.getElementById('billiardStatusBody');
+  if (!tbody) return;
+  tbody.innerHTML = tables.map(t => `
+    <tr>
+      <td style="font-weight:600">${t.table_name}</td>
+      <td style="color:var(--muted)">${t.customer || '–'}</td>
+      <td><span class="status-badge ${badgeClass(t.status)}">${displayStatus(t.status)}</span></td>
+      <td class="hours-left-cell" data-endtime="${t.hours_left}">${t.hours_left}</td>
+    </tr>`).join('');
+}
 async function refreshBilliardStatus() {
   try {
-    const res  = await fetch('/brew-n-break-pos/billiard_status.php');
+    const res  = await fetch('http://localhost:5000/api/billiard-status');
     const data = await res.json();
-    if (!data.success || !data.tables) return;
-    const tbody = document.getElementById('billiardStatusBody');
-    if (!tbody) return;
-    const badgeClass = s => {
-      const sl = s.toLowerCase();
-      if (sl === 'reserved') return 'badge-reserved';
-      if (sl === 'occupied' || sl === 'ongoing' || sl === 'start') return 'badge-occupied';
-      return 'badge-available';
-    };
-    const displayStatus = s => {
-      const sl = s.toLowerCase();
-      return (sl === 'ongoing' || sl === 'start') ? 'Occupied' : s.charAt(0).toUpperCase() + s.slice(1);
-    };
-    tbody.innerHTML = data.tables.map(t => `
-      <tr>
-        <td style="font-weight:600">${t.table_name}</td>
-        <td style="color:var(--muted)">${t.customer || '–'}</td>
-        <td><span class="status-badge ${badgeClass(t.status)}">${displayStatus(t.status)}</span></td>
-        <td class="hours-left-cell" data-endtime="${t.hours_left}">${t.hours_left}</td>
-      </tr>`).join('');
-  } catch(e) {}
+    if (data.success && data.tables) { applyBilliardRows(data.tables); return; }
+    throw new Error();
+  } catch(e) {
+    try {
+      const res2  = await fetch('/brew-n-break-pos/billiard_status.php');
+      const data2 = await res2.json();
+      if (data2.success && data2.tables) applyBilliardRows(data2.tables);
+    } catch(e2) {}
+  }
 }
 refreshBilliardStatus();
 setInterval(refreshBilliardStatus, 5000);
@@ -611,7 +611,7 @@ new Chart(document.getElementById('barChart'),{
   let currentAlertIds = [];
   async function pollBell(){
     try {
-      const res  = await fetch('/brew-n-break-pos/notification_check.php');
+      const res  = await fetch('http://localhost:5000/api/notifications');
       const data = await res.json();
       const alerts = (data.alerts || []).filter(a => (a.secs_left ?? 999) <= 300);
       const badge = document.getElementById('bellBadge');

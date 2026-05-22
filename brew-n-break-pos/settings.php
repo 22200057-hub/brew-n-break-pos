@@ -171,6 +171,8 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .toast.show{opacity:1;transform:translateY(0);}
 
 .error-msg{color:#c0392b;font-size:12px;margin-top:8px;min-height:16px;}
+#logoutModal,#updateModal,#resetModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;}
+#logoutModal.active,#updateModal.active,#resetModal.active{display:flex;}
 .lo-box{background:var(--card-bg);border-radius:18px;padding:32px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);max-width:320px;width:90%;animation:popIn .22s ease both;}
 .lo-icon{font-size:42px;margin-bottom:14px;}
 .lo-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--text-dark);margin-bottom:8px;}
@@ -181,6 +183,7 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .lo-confirm{flex:1;padding:10px 0;border-radius:10px;border:none;background:var(--dark);color:var(--cream);font-size:13px;font-weight:700;cursor:pointer;transition:background .2s;}
 .lo-confirm:hover{background:#2e2820;}
 @keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+#bellPopup{display:none;position:fixed;bottom:24px;right:24px;width:320px;background:#1e1a14;border-radius:12px;border:1px solid rgba(240,192,64,0.3);box-shadow:0 8px 32px rgba(0,0,0,0.55);z-index:99999;overflow:hidden;color:#f5eedc;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}

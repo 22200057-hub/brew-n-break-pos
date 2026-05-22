@@ -134,10 +134,11 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .select-count{font-weight:700;font-size:14px;}
 .select-clear{background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:12px;text-decoration:underline;}
 
-.tbl-wrap{overflow:visible;}
+.tbl-wrap{flex:1;overflow-y:auto;min-height:0;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
-thead tr{border-bottom:2px solid rgba(0,0,0,0.15);}
-thead th{text-align:left;padding:10px 12px;color:var(--text-mid);font-size:12px;letter-spacing:.6px;text-transform:uppercase;font-weight:700;}
+thead tr{position:sticky;top:0;z-index:5;background:var(--card-bg);border-bottom:2px solid rgba(0,0,0,0.15);}
+thead th{text-align:left;padding:10px 12px;color:var(--text-mid);font-size:12px;letter-spacing:.6px;text-transform:uppercase;font-weight:700;background:var(--card-bg);}
+#tableCard{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
 tbody tr:nth-child(odd){background:var(--row-odd);}
 tbody tr:nth-child(even){background:var(--row-even);}
 tbody tr{transition:background .15s;}
@@ -271,6 +272,7 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
 .pg-btn:disabled{opacity:.4;cursor:not-allowed;}
 .pg-btn.pg-active{background:var(--dark);color:var(--cream);border-color:transparent;}
 .pg-ellipsis{padding:0 4px;color:var(--muted);font-size:13px;line-height:1;display:inline-flex;align-items:center;}
+#bellPopup{display:none;position:fixed;bottom:24px;right:24px;width:320px;background:#1e1a14;border-radius:12px;border:1px solid rgba(240,192,64,0.3);box-shadow:0 8px 32px rgba(0,0,0,0.55);z-index:99999;overflow:hidden;color:#f5eedc;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -281,6 +283,14 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
 .bp-item-msg{color:rgba(255,255,255,0.6);line-height:1.4;}
 .tx-stat{background:var(--card-bg);border-radius:10px;padding:10px 18px;font-size:12px;color:var(--text-mid);box-shadow:0 1px 4px rgba(0,0,0,0.08);display:flex;flex-direction:column;gap:2px;}
 .tx-stat strong{font-family:'Playfair Display',serif;font-size:20px;color:var(--text-dark);}
+.hamburger{display:none;background:none;border:none;color:var(--cream);font-size:22px;cursor:pointer;padding:6px 10px;border-radius:8px;line-height:1;align-items:center;justify-content:center;}
+.hamburger:hover{background:rgba(255,255,255,0.12);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:150;}
+.sidebar-overlay.active{display:block;}
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--darker);border-top:1px solid rgba(255,255,255,0.08);z-index:120;align-items:stretch;justify-content:space-around;}
+.mn-item{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:var(--muted);text-decoration:none;font-size:10px;gap:3px;padding:6px 4px;transition:color .2s;}
+.mn-item span:first-child{font-size:20px;}
+.mn-item.active,.mn-item:hover{color:var(--gold);}
 </style>
 <!-- React CDN -->
 <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -289,36 +299,46 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
 <style id="responsive-overrides">
 @media (max-width:900px){
   .stat-grid{grid-template-columns:repeat(2,1fr)!important;}
-  .mid-row{grid-template-columns:1fr!important;overflow-y:auto;}
-  .bottom-row{grid-template-columns:1fr!important;overflow-y:auto;}
+  .mid-row{grid-template-columns:1fr!important;}
+  .bottom-row{grid-template-columns:1fr!important;}
   .main{overflow-y:auto!important;padding:16px!important;}
   .layout{overflow-y:auto!important;}
   body{height:auto!important;overflow:auto!important;}
 }
 @media (max-width:768px){
-  .sidebar{width:52px!important;}
-  .topnav{padding:0 12px 0 10px!important;}
+  .hamburger{display:flex!important;}
+  .sidebar{position:fixed!important;left:0!important;top:64px!important;height:calc(100vh - 64px)!important;z-index:200!important;transform:translateX(-100%)!important;width:220px!important;transition:transform .25s ease!important;border-right:1px solid rgba(255,255,255,0.08)!important;}
+  .sidebar.open{transform:translateX(0)!important;}
+  .topnav{padding:0 16px 0 12px!important;}
   .brand{font-size:16px!important;}
+  .user-label{display:none!important;}
   .page-title{font-size:22px!important;}
-  .stat-value{font-size:26px!important;}
   .card,.widget,.bottom-widget{padding:14px!important;border-radius:10px!important;}
   .tbl-wrap{overflow-x:auto!important;}
-  table{min-width:600px!important;}
-  .toolbar{flex-direction:column!important;align-items:flex-start!important;}
-  .tabs{width:100%!important;}
-  .toolbar-right{width:100%!important;justify-content:flex-end!important;}
+  table{min-width:560px!important;}
+  .toolbar{flex-direction:column!important;align-items:flex-start!important;gap:8px!important;}
+  .tabs{width:100%!important;overflow-x:auto!important;}
+  .toolbar-right{width:100%!important;justify-content:space-between!important;}
+  .search-wrap input{width:100px!important;}
+  .modal-overlay > *{width:94vw!important;max-height:88vh!important;overflow-y:auto!important;}
 }
 @media (max-width:480px){
   .stat-grid{grid-template-columns:1fr!important;}
+  .hamburger{display:flex!important;}
   .sidebar{display:none!important;}
-  .main{padding:12px!important;}
-  .topnav{height:54px!important;}
+  .sidebar-overlay{display:none!important;}
+  .mobile-nav{display:flex!important;}
+  body{padding-bottom:62px!important;}
+  .main{padding:10px!important;}
+  .topnav{height:54px!important;padding:0 10px!important;}
   .brand{font-size:15px!important;}
-  .logo-circle{width:36px!important;height:36px!important;}
-  .page-title{font-size:20px!important;}
-  .stat-value{font-size:22px!important;}
-  .stat-card{padding:14px 16px!important;}
+  .logo-circle{width:36px!important;height:36px!important;font-size:15px!important;}
+  .page-title{font-size:19px!important;}
+  .page-header{flex-wrap:wrap!important;gap:4px!important;}
+  .page-time{font-size:11px!important;}
   .tab-btn{padding:6px 10px!important;font-size:12px!important;}
+  .tx-stat,.sum-card{min-width:120px!important;}
+  table{min-width:480px!important;}
 }
 </style>
 </head>
@@ -329,6 +349,7 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
     <div class="logo-circle" style="overflow:hidden;padding:0;"><img src="../img/logo.png" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;"/></div>
     <span class="brand">Brew n' Break</span>
   </div>
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
   <div class="topnav-right">
     <span class="user-label"><?= htmlspecialchars($username) ?></span>
     <div style="position:relative;">
@@ -342,6 +363,7 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
 </nav>
 
 <div class="layout">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
   <aside class="sidebar">
     <?php $sp=$userRole==='Staff'?'staff.php':''; ?>
     <a class="nav-item" href="<?=$sp?:'dashboard.php'?>"><span>🏠</span><span class="tip">Dashboard</span></a>
@@ -368,15 +390,17 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
         const txData = <?= json_encode($transactions) ?>;
 
         function TransactionSummary({ data }) {
-          const total     = data.length;
-          const revenue   = data.reduce((s, t) => s + parseFloat(t.total_amount || 0), 0);
-          const pending   = data.filter(t => !['done','confirmed','cancelled'].includes(t.status?.toLowerCase())).length;
-          const done      = data.filter(t => ['done','confirmed'].includes(t.status?.toLowerCase())).length;
+          const todayStr  = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+          const today     = data.filter(t => t.created_at && t.created_at.slice(0,10) === todayStr);
+          const total     = today.length;
+          const revenue   = today.reduce((s, t) => s + parseFloat(t.total_amount || 0), 0);
+          const pending   = today.filter(t => !['done','confirmed','cancelled'].includes(t.status?.toLowerCase())).length;
+          const done      = today.filter(t => ['done','confirmed'].includes(t.status?.toLowerCase())).length;
 
           return (
             <div id="tx-summary-root" style={{display:'flex',gap:'10px',marginBottom:'14px',flexWrap:'wrap'}}>
-              <div className="tx-stat"><span>Total Transactions</span><strong>{total}</strong></div>
-              <div className="tx-stat"><span>Total Revenue</span><strong>₱{revenue.toLocaleString('en-PH',{minimumFractionDigits:2})}</strong></div>
+              <div className="tx-stat"><span>Today's Transactions</span><strong>{total}</strong></div>
+              <div className="tx-stat"><span>Today's Revenue</span><strong>₱{revenue.toLocaleString('en-PH',{minimumFractionDigits:2})}</strong></div>
               <div className="tx-stat"><span>Completed</span><strong>{done}</strong></div>
               <div className="tx-stat"><span>Unpaid</span><strong>{pending}</strong></div>
             </div>
@@ -387,7 +411,7 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
       })();
     </script>
 
-    <div class="card">
+    <div class="card" id="tableCard">
       <div class="toolbar">
         <div class="tabs">
           <button class="tab-btn active" onclick="filterTab('all',this)">All</button>
@@ -417,7 +441,7 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
         <button class="select-clear" onclick="clearAll()">Clear selection</button>
       </div>
 
-      <div class="tbl-wrap" style="overflow:visible;">
+      <div class="tbl-wrap">
         <table>
           <thead>
             <tr>
@@ -439,6 +463,7 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
                 'done'      => 'status-done',
                 'confirmed' => 'status-done',
                 'pending'   => 'status-pending',
+                'expired'   => 'status-pending',
                 'cancelled' => 'status-cancelled',
                 'ongoing'   => 'status-ongoing',
                 default     => 'status-pending'
@@ -502,7 +527,7 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
       </div>
 
       <!-- Pagination -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:10px;flex-shrink:0;">
         <div id="pageInfo" style="font-size:12px;color:var(--muted);"></div>
         <div id="pageControls" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;"></div>
       </div>
@@ -672,6 +697,13 @@ function updateClock(){
     now.toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'});
 }
 updateClock(); setInterval(updateClock,1000);
+function toggleSidebar(){
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  if(!sb||!ov) return;
+  sb.classList.toggle('open');
+  ov.classList.toggle('active');
+}
 let currentTab='all';
 function filterTab(tab,btn){
   currentTab=tab;
@@ -884,33 +916,31 @@ async function confirmCheckout(){
   btn.disabled = true;
   btn.textContent = 'Processing…';
   const items = rows.map(r => ({id: r.dataset.id, source: r.dataset.source}));
+  const payload = {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'checkout',items})};
+
+  function applyCheckoutUI(){
+    rows.forEach(r => {
+      const statusCell = r.querySelector('.status-cell');
+      r.dataset.status = 'Done';
+      if(statusCell) statusCell.innerHTML = '<span class="status-done">Done</span><span class="paid-badge">✓ Paid</span>';
+    });
+    clearAll();
+    document.getElementById('checkoutOverlay').classList.remove('open');
+  }
+
   try {
-    const res  = await fetch('transaction_action.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'checkout',items})});
+    const res  = await fetch('http://localhost:5000/api/transaction-action', payload);
     const data = await res.json();
-    if(data.success){
-      rows.forEach(r => {
-        const statusCell = r.querySelector('.status-cell');
-        if(r.dataset.source === 'billiard' && r.dataset.status !== 'Reserved'){
-          r.dataset.status = 'Done';
-          if(statusCell){
-            statusCell.innerHTML = '<span class="status-done">Done</span><span class="paid-badge">✓ Paid</span>';
-          }
-        } else {
-          if(statusCell){
-            const unpaid = statusCell.querySelector('.unpaid-badge'); // removes "Pending"
-            if(unpaid) unpaid.remove();
-            if(!statusCell.querySelector('.paid-badge')){
-              statusCell.insertAdjacentHTML('beforeend','<span class="paid-badge">✓ Paid</span>');
-            }
-          }
-        }
-      });
-      clearAll();
-      document.getElementById('checkoutOverlay').classList.remove('open');
-    } else {
-      alert(data.message || 'Checkout failed.');
-    }
-  } catch(e){ alert('Server error.'); }
+    if(data.success){ applyCheckoutUI(); }
+    else throw new Error(data.message || 'Checkout failed.');
+  } catch(e){
+    try {
+      const res2  = await fetch('transaction_action.php', payload);
+      const data2 = await res2.json();
+      if(data2.success){ applyCheckoutUI(); }
+      else alert(data2.message || 'Checkout failed.');
+    } catch(e2){ alert('Checkout failed. Please try again.'); }
+  }
   btn.disabled = false;
   btn.textContent = '✅ Confirm Checkout';
 }
@@ -1047,8 +1077,10 @@ function openPrintWindow(bodyHtml) {
   const shownIds = new Set();
   async function pollBell(){
     try {
-      const res  = await fetch('notification_check.php');
-      const data = await res.json();
+      let data;
+      try { const r = await fetch('http://localhost:5000/api/notifications'); data = await r.json(); }
+      catch(e) { const r2 = await fetch('notification_check.php'); data = await r2.json(); }
+      if(!data) return;
       const alerts = (data.alerts || []).filter(a => (a.secs_left ?? 999) <= 300);
       const badge = document.getElementById('bellBadge');
       const popup = document.getElementById('bellPopup');
@@ -1153,24 +1185,31 @@ async function submitEdit(){
   const source=document.getElementById('editSrc').value;
   const status=document.getElementById('editStatus').value;
   const amount=parseFloat(document.getElementById('editAmount').value)||0;
-  try{
-    const res=await fetch('transaction_action.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'edit',id,source,status,amount})});
-    const data=await res.json();
-    if(data.success){
-      if(_editRow){
-        _editRow.dataset.status=status;
-        _editRow.dataset.amount=amount;
-        const sc={done:'status-done',pending:'status-pending',cancelled:'status-cancelled',ongoing:'status-ongoing'}[status.toLowerCase()]||'status-pending';
-        const statusCell=_editRow.querySelector('td:nth-child(6) span');
-        if(statusCell){statusCell.className=sc;statusCell.textContent=status;}
-        const amtCell=_editRow.querySelector('td:nth-child(5)');
-        if(amtCell) amtCell.textContent='₱'+amount.toLocaleString('en-PH',{minimumFractionDigits:2});
-      }
-      document.getElementById('editOverlay').classList.remove('open');
-    } else {
-      alert(data.message||'Error saving changes.');
+  const editPayload={method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'edit',id,source,status,amount})};
+  function applyEditUI(){
+    if(_editRow){
+      _editRow.dataset.status=status; _editRow.dataset.amount=amount;
+      const sc={done:'status-done',pending:'status-pending',cancelled:'status-cancelled',ongoing:'status-ongoing'}[status.toLowerCase()]||'status-pending';
+      const statusCell=_editRow.querySelector('td:nth-child(6) span');
+      if(statusCell){statusCell.className=sc;statusCell.textContent=status;}
+      const amtCell=_editRow.querySelector('td:nth-child(5)');
+      if(amtCell) amtCell.textContent='₱'+amount.toLocaleString('en-PH',{minimumFractionDigits:2});
     }
-  } catch(e){ alert('Server error.'); }
+    document.getElementById('editOverlay').classList.remove('open');
+  }
+  try{
+    const res=await fetch('http://localhost:5000/api/transaction-action',editPayload);
+    const data=await res.json();
+    if(data.success){ applyEditUI(); }
+    else throw new Error(data.message||'');
+  } catch(e){
+    try{
+      const res2=await fetch('transaction_action.php',editPayload);
+      const data2=await res2.json();
+      if(data2.success){ applyEditUI(); }
+      else alert(data2.message||'Error saving changes.');
+    } catch(e2){ alert('Error saving changes. Please try again.'); }
+  }
 }
 applyFilters();
 
@@ -1187,14 +1226,30 @@ function closeDeleteTx(e){ if(e.target===document.getElementById('deleteTxOverla
 document.getElementById('confirmTxDeleteBtn').addEventListener('click', async function(){
   if(!_deleteTxRow) return;
   this.disabled=true; this.textContent='Deleting…';
+  const delPayload={method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete',id:_deleteTxRow.dataset.id,source:_deleteTxRow.dataset.source})};
+  const btn=this;
   try{
-    const res=await fetch('transaction_action.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete',id:_deleteTxRow.dataset.id,source:_deleteTxRow.dataset.source})});
+    const res=await fetch('http://localhost:5000/api/transaction-action',delPayload);
     const data=await res.json();
-    if(data.success){ _deleteTxRow.remove(); cancelDeleteTx(); clearAll(); }
-    else{ this.disabled=false; this.textContent='Delete'; alert(data.message||'Error deleting transaction.'); }
-  } catch(e){ this.disabled=false; this.textContent='Delete'; alert('Server error.'); }
+    if(data.success){ _deleteTxRow.remove(); cancelDeleteTx(); clearAll(); return; }
+    else throw new Error(data.message||'');
+  } catch(e){
+    try{
+      const res2=await fetch('transaction_action.php',delPayload);
+      const data2=await res2.json();
+      if(data2.success){ _deleteTxRow.remove(); cancelDeleteTx(); clearAll(); }
+      else{ btn.disabled=false; btn.textContent='Delete'; alert(data2.message||'Error deleting transaction.'); }
+    } catch(e2){ btn.disabled=false; btn.textContent='Delete'; alert('Error deleting. Please try again.'); }
+  }
 });
 </script>
+<nav class="mobile-nav" id="mobileNav">
+  <a href="/brew-n-break-pos/dashboard.php" class="mn-item"><span>🏠</span><span>Home</span></a>
+  <a href="/brew-n-break-pos/menu.php" class="mn-item"><span>☕</span><span>Cafe</span></a>
+  <a href="/brew-n-break-pos/billiard.php" class="mn-item"><span>🎱</span><span>Billiard</span></a>
+  <a href="/brew-n-break-pos/transactions.php" class="mn-item active"><span>📋</span><span>Transactions</span></a>
+  <a href="/brew-n-break-pos/bookings.php" class="mn-item"><span>📅</span><span>Bookings</span></a>
+</nav>
 <div id="bellPopup">
   <div class="bp-header">
     <span class="bp-title">⚠️ Session Expiring Soon</span>
@@ -1211,8 +1266,10 @@ document.getElementById('confirmTxDeleteBtn').addEventListener('click', async fu
   let currentAlertIds = [];
   async function pollBell(){
     try {
-      const res  = await fetch('notification_check.php');
-      const data = await res.json();
+      let data;
+      try { const r = await fetch('http://localhost:5000/api/notifications'); data = await r.json(); }
+      catch(e) { const r2 = await fetch('notification_check.php'); data = await r2.json(); }
+      if(!data) return;
       const alerts = (data.alerts || []).filter(a => (a.secs_left ?? 999) <= 300);
       const badge = document.getElementById('bellBadge');
       const popup = document.getElementById('bellPopup');

@@ -50,7 +50,11 @@ try {
         foreach ($items as $item) {
             $itemId     = intval($item['id'] ?? 0);
             $itemSource = $item['source'] ?? '';
-            if ($itemSource === 'billiard' && $itemId) {
+            if ($itemSource === 'cafe' && $itemId) {
+                $stmt = $conn->prepare("UPDATE orders SET status='Done' WHERE id=?");
+                $stmt->bind_param('i', $itemId);
+                $stmt->execute();
+            } elseif ($itemSource === 'billiard' && $itemId) {
                 $sr = $conn->prepare("SELECT status, table_name FROM billiard_sessions WHERE id=?");
                 $sr->bind_param('i', $itemId);
                 $sr->execute();

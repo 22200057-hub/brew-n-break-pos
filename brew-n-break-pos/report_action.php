@@ -46,7 +46,7 @@ try {
             if ($r) while ($row = $r->fetch_assoc()) $transactions[] = $row;
         }
         if ($type === 'Transaction Report' || $type === 'Daily Report' || $type === 'Booking Report' || $type === 'Revenue Report') {
-            $r = $conn->query("SELECT b.booking_code as code, CONCAT(b.room,' – ',b.guest_name) as product, 'Booking' as type, 0 as amount, b.status, DATE_FORMAT(b.created_at,'%h:%i %p %M %d, %Y') as date FROM bookings b WHERE DATE(b.created_at) BETWEEN '$start' AND '$end'");
+            $r = $conn->query("SELECT b.booking_code as code, CONCAT(b.room,' – ',b.guest_name) as product, 'Booking' as type, DATEDIFF(b.check_out, b.check_in) * 3500 as amount, b.status, DATE_FORMAT(b.created_at,'%h:%i %p %M %d, %Y') as date FROM bookings b WHERE DATE(b.created_at) BETWEEN '$start' AND '$end'");
             if ($r) while ($row = $r->fetch_assoc()) $transactions[] = $row;
         }
 
