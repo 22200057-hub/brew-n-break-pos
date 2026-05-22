@@ -36,6 +36,7 @@ A Point-of-Sale system for **Brew n' Break** — a cafe and billiard lounge. Bui
 | Username | Password | Role |
 |---|---|---|
 | `admin` | `admin` | Administrator |
+| `staff` | `staff` | Staff |
 
 ---
 
