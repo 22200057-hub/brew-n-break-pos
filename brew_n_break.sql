@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2026 at 04:57 PM
+-- Generation Time: May 22, 2026 at 06:32 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -45,7 +45,7 @@ CREATE TABLE `billiard_sessions` (
 --
 
 INSERT INTO `billiard_sessions` (`id`, `session_code`, `customer_name`, `table_name`, `start_time`, `end_time`, `hours_used`, `amount`, `status`, `created_at`) VALUES
-(36, 'BT001', 'justine mislang', 'Outdoor 1', '22:32:00', '23:32:00', 0.00, 100.00, 'Start', '2026-05-22 14:32:41'),
+(36, 'BT001', 'justine mislang', 'Outdoor 1', '22:32:00', '23:32:00', 0.00, 100.00, 'Done', '2026-05-22 14:32:41'),
 (37, 'BT002', 'Jrf', 'Outdoor 2', '22:35:00', '23:35:00', 0.00, 100.00, 'Done', '2026-05-22 14:35:52');
 
 -- --------------------------------------------------------
@@ -93,7 +93,9 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `booking_code`, `guest_name`, `room`, `check_in`, `check_out`, `status`, `created_at`) VALUES
-(12, 'BK001', 'hehe', 'Airbnb', '2026-05-22', '2026-05-24', 'Confirmed', '2026-05-22 14:36:45');
+(12, 'BK001', 'hehe', 'Airbnb', '2026-05-22', '2026-05-24', 'Confirmed', '2026-05-22 14:36:45'),
+(13, 'BK002', 'asdasddsaads', 'Airbnb', '2026-05-26', '2026-05-28', 'Confirmed', '2026-05-22 15:42:57'),
+(14, 'BK003', 'dfgdfgdfg', 'Airbnb', '2026-05-30', '2026-05-31', 'Confirmed', '2026-05-22 15:48:17');
 
 -- --------------------------------------------------------
 
@@ -120,7 +122,11 @@ INSERT INTO `orders` (`id`, `order_code`, `type`, `status`, `total_amount`, `cre
 (18, 'ORDR003', 'Coffee', 'Done', 110.00, '2026-05-22 14:28:41'),
 (19, 'ORDR004', 'Coffee', 'Done', 140.00, '2026-05-22 14:28:45'),
 (20, 'ORDR005', 'Coffee', 'Done', 160.00, '2026-05-22 14:28:50'),
-(21, 'ORDR006', 'Coffee', 'Done', 150.00, '2026-05-22 14:28:54');
+(21, 'ORDR006', 'Coffee', 'Done', 150.00, '2026-05-22 14:28:54'),
+(23, 'ORDR007', 'Foods', 'Done', 220.00, '2026-05-22 15:36:12'),
+(24, 'ORDR008', 'Foods', 'Done', 190.00, '2026-05-22 15:38:24'),
+(25, 'ORDR009', 'Coffee', 'Done', 140.00, '2026-05-22 15:43:41'),
+(26, 'ORDR010', 'Foods', 'Done', 220.00, '2026-05-22 16:27:49');
 
 -- --------------------------------------------------------
 
@@ -146,7 +152,11 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) 
 (23, 18, 7, 1, 110.00),
 (24, 19, 8, 1, 140.00),
 (25, 20, 19, 1, 160.00),
-(26, 21, 1, 1, 150.00);
+(26, 21, 1, 1, 150.00),
+(28, 23, 32, 1, 220.00),
+(29, 24, 37, 1, 190.00),
+(30, 25, 15, 1, 140.00),
+(31, 26, 30, 1, 220.00);
 
 -- --------------------------------------------------------
 
@@ -225,7 +235,8 @@ CREATE TABLE `reports` (
 --
 
 INSERT INTO `reports` (`id`, `report_code`, `type`, `date_from`, `date_to`, `created_at`) VALUES
-(9, 'RID0001', 'Daily Report', '2026-04-22', '2026-05-22', '2026-05-22 14:38:11');
+(9, 'RID0001', 'Daily Report', '2026-04-22', '2026-05-22', '2026-05-22 14:38:11'),
+(12, 'RID0002', 'Daily Report', '2026-04-22', '2026-05-22', '2026-05-22 15:56:01');
 
 -- --------------------------------------------------------
 
@@ -316,7 +327,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `billiard_sessions`
 --
 ALTER TABLE `billiard_sessions`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `billiard_tables`
@@ -328,19 +339,19 @@ ALTER TABLE `billiard_tables`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -352,13 +363,13 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
