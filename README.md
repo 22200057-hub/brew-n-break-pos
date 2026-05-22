@@ -1,6 +1,6 @@
-# Brew & Break — POS System
+# Brew N' Break — POS System
 
-A web-based Point-of-Sale (POS) system built for **Brew & Break**, a café and billiard shop. This system allows staff and administrators to manage café orders, billiard sessions, bookings, transactions, and generate reports — all from a single platform.
+A web-based Point-of-Sale (POS) system built for **Brew N' Break**, a café and billiard shop. This system allows staff and administrators to manage café orders, billiard sessions, bookings, transactions, and generate reports — all from a single platform.
 
 ---
 
