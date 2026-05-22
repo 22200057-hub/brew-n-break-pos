@@ -1,5 +1,4 @@
 <?php
-// notification_check.php — polled every 30s to check for new alerts
 session_start();
 error_reporting(0);
 ini_set('display_errors', 0);
@@ -39,7 +38,6 @@ try {
                 'secs_left'=> $secs,
             ];
         }
-        // Sessions that just ended (Done, within last 10 minutes of scheduled end_time)
         $r = $conn->query("
             SELECT id, table_name, customer_name, end_time
             FROM billiard_sessions

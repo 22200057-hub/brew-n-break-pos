@@ -17,7 +17,6 @@ $userRole     = ucfirst(strtolower($_SESSION['role'] ?? 'admin'));
 try {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     if (!$conn->connect_error) {
-        // Cafe orders — with product list
         $r = $conn->query("
             SELECT
                 o.id,
@@ -34,8 +33,6 @@ try {
             GROUP BY o.id
         ");
         if ($r) while ($row = $r->fetch_assoc()) $transactions[] = $row;
-
-        // Billiard sessions — with table name, customer, duration
         $r = $conn->query("
             SELECT
                 bs.id,
@@ -53,8 +50,6 @@ try {
             FROM billiard_sessions bs
         ");
         if ($r) while ($row = $r->fetch_assoc()) $transactions[] = $row;
-
-        // Bookings — Airbnb room reservations
         $r = $conn->query("
             SELECT
                 b.id,
@@ -133,16 +128,13 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .icon-btn.checkout-btn:hover{background:#b8994e;}
 .icon-btn.checkout-btn:disabled{opacity:.5;cursor:not-allowed;}
 
-/* SELECTION BAR */
 .select-bar{display:none;align-items:center;justify-content:space-between;background:var(--dark);color:var(--cream);border-radius:10px;padding:10px 16px;margin-bottom:12px;font-size:13px;}
 .select-bar.visible{display:flex;}
 .select-bar-left{display:flex;align-items:center;gap:10px;}
 .select-count{font-weight:700;font-size:14px;}
 .select-clear{background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:12px;text-decoration:underline;}
 
-/* TABLE */
 .tbl-wrap{overflow:visible;}
-#tableBody tr{display:none;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 thead tr{border-bottom:2px solid rgba(0,0,0,0.15);}
 thead th{text-align:left;padding:10px 12px;color:var(--text-mid);font-size:12px;letter-spacing:.6px;text-transform:uppercase;font-weight:700;}
@@ -153,18 +145,15 @@ tbody tr:hover{background:rgba(200,169,110,0.3);}
 tbody tr.selected{background:rgba(200,169,110,0.45)!important;outline:2px solid var(--gold);outline-offset:-2px;}
 tbody td{padding:10px 12px;color:var(--text-dark);}
 
-/* CHECKBOX */
 .row-check{width:18px;height:18px;accent-color:var(--dark);cursor:pointer;}
 .th-check{width:36px;}
 
-/* TYPE BADGE */
 .type-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;}
 .badge-cafe    {background:#e8f4fd;color:#1a5276;}
 .badge-billiards{background:#fdf2e9;color:#784212;}
 .badge-foods   {background:#eafaf1;color:#1e8449;}
 .badge-booking {background:#f3eafd;color:#6c3483;}
 
-/* DESCRIPTION */
 .desc-main{font-size:13px;color:var(--text-dark);}
 .desc-sub{font-size:11px;color:var(--muted);margin-top:2px;}
 
@@ -185,7 +174,7 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
 .action-wrap.open .dropdown{display:block;}
 .dropdown a.dd-danger{color:#c0392b;}
 .dropdown a.dd-danger:hover{background:rgba(192,57,43,0.15);}
-/* EDIT MODAL */
+
 .edit-modal{background:var(--card-bg);border-radius:16px;width:min(420px,94vw);box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:fadeUp .3s ease both;}
 .edit-body{padding:28px 32px;}
 .edit-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--text-dark);margin-bottom:20px;}
@@ -195,11 +184,9 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
 .edit-input:focus{border-color:var(--gold);}
 .edit-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;}
 
-/* MODAL BASE */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:300;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
 
-/* CHECKOUT MODAL */
 .checkout-modal{background:#fff;border-radius:16px;width:min(560px,95vw);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:fadeUp .3s ease both;}
 .co-body{padding:36px 40px;font-family:'Lato',sans-serif;color:#1a1410;}
 .co-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:18px;border-bottom:2px solid #e8dcc8;margin-bottom:22px;}
@@ -248,7 +235,6 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
 .co-discount-row.discount-line{font-weight:700;color:#1e8449;padding:7px 0 3px;border-top:1px solid #ddd0b4;margin-top:2px;}
 .co-discount-note{font-size:10px;color:#7a6e5f;text-align:center;margin-top:7px;letter-spacing:.3px;}
 
-/* DELETE CONFIRM MODAL */
 .del-modal{background:var(--card-bg);border-radius:16px;padding:28px 32px;width:min(360px,92vw);box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:fadeUp .3s ease both;}
 .del-modal-icon{font-size:40px;text-align:center;margin-bottom:12px;}
 .del-modal h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--text-dark);text-align:center;margin-bottom:8px;}
@@ -261,7 +247,6 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
 .btn-del-confirm:hover{background:#5c1818;}
 .btn-del-confirm:disabled{opacity:.6;cursor:not-allowed;}
 
-/* INVOICE MODAL */
 .inv-modal{background:#fff;border-radius:16px;width:min(500px,94vw);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:fadeUp .3s ease both;}
 .invoice{padding:36px 40px;font-family:'Lato',sans-serif;color:#1a1410;}
 .inv-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:18px;border-bottom:2px solid #e8dcc8;}
@@ -281,16 +266,11 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
 .inv-footer{text-align:center;font-size:11px;color:#7a6e5f;margin-top:20px;padding-top:16px;border-top:1px solid #e8dcc8;}
 .inv-actions{display:flex;gap:10px;justify-content:flex-end;padding:0 40px 28px;}
 
-/* PAGINATION */
 .pg-btn{padding:5px 11px;border-radius:7px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.4);cursor:pointer;font-size:13px;font-family:'Lato',sans-serif;font-weight:700;color:var(--text-dark);transition:background .2s;min-width:34px;}
 .pg-btn:hover:not(:disabled){background:rgba(255,255,255,0.7);}
 .pg-btn:disabled{opacity:.4;cursor:not-allowed;}
 .pg-btn.pg-active{background:var(--dark);color:var(--cream);border-color:transparent;}
 .pg-ellipsis{padding:0 4px;color:var(--muted);font-size:13px;line-height:1;display:inline-flex;align-items:center;}
-
-/* Bell badge + popup */
-#bellBadge{position:absolute;top:5px;right:5px;background:#e07070;color:#fff;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center;pointer-events:none;z-index:20;}
-#bellPopup{display:none;position:fixed;left:76px;bottom:68px;z-index:99999;min-width:256px;max-width:310px;background:#1e1a14;color:#f5eedc;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(240,192,64,0.35);overflow:hidden;animation:fadeUp .25s ease both;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -299,7 +279,6 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
 .bp-item:last-child{border-bottom:none;}
 .bp-item-title{font-weight:700;color:#f0c040;margin-bottom:3px;}
 .bp-item-msg{color:rgba(255,255,255,0.6);line-height:1.4;}
-#tx-summary-root{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
 .tx-stat{background:var(--card-bg);border-radius:10px;padding:10px 18px;font-size:12px;color:var(--text-mid);box-shadow:0 1px 4px rgba(0,0,0,0.08);display:flex;flex-direction:column;gap:2px;}
 .tx-stat strong{font-family:'Playfair Display',serif;font-size:20px;color:var(--text-dark);}
 </style>
@@ -686,7 +665,6 @@ tbody td{padding:10px 12px;color:var(--text-dark);}
 <script>
 function toggleAvatarMenu(e){e.stopPropagation();var m=document.getElementById('avatarMenu');m.style.display=m.style.display==='none'?'block':'none';}
 document.addEventListener('click',function(){var m=document.getElementById('avatarMenu');if(m)m.style.display='none';});
-// Clock
 function updateClock(){
   const now=new Date();
   document.getElementById('liveClock').textContent=
@@ -694,8 +672,6 @@ function updateClock(){
     now.toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'});
 }
 updateClock(); setInterval(updateClock,1000);
-
-// Tab filter
 let currentTab='all';
 function filterTab(tab,btn){
   currentTab=tab;
@@ -759,8 +735,6 @@ function goToPage(n){
   renderPage();
   renderPagination();
 }
-
-// Checkbox selection
 function onRowCheck(cb){
   const row = cb.closest('tr');
   row.classList.toggle('selected', cb.checked);
@@ -799,8 +773,6 @@ function clearAll(){
   document.getElementById('selectAll').checked=false;
   updateSelectionUI();
 }
-
-// Dropdown
 function toggleDD(id,btn){
   const wrap=document.getElementById('wrap-'+id);
   const dd=wrap.querySelector('.dropdown');
@@ -815,14 +787,10 @@ function toggleDD(id,btn){
   }
 }
 document.addEventListener('click',e=>{if(!e.target.closest('.action-wrap'))document.querySelectorAll('.action-wrap').forEach(w=>w.classList.remove('open'));});
-
-// Overlay helpers
 function closeOverlay(id,e){
   if(e && e.target!==document.getElementById(id)) return;
   document.getElementById(id).classList.remove('open');
 }
-
-// CHECKOUT — build from selected rows
 let _discountApplied = false;
 let _cafeSubtotal    = 0;
 let _fullTotal       = 0;
@@ -863,8 +831,6 @@ function openCheckout(){
   document.getElementById('coTotal').textContent='₱'+_payableTotal.toLocaleString('en-PH',{minimumFractionDigits:2});
   document.getElementById('coCashInput').value='';
   document.getElementById('coChangeRow').style.display='none';
-
-  // Show discount button only when there are cafe/food items
   const discWrap = document.getElementById('coDiscountWrap');
   const discBtn  = document.getElementById('coDiscountBtn');
   const discDetail = document.getElementById('coDiscountDetail');
@@ -899,8 +865,6 @@ function toggleDiscount(){
   document.getElementById('coTotal').textContent='₱'+_payableTotal.toLocaleString('en-PH',{minimumFractionDigits:2});
   updateChange();
 }
-
-// Change display
 function updateChange(){
   const cash = parseFloat(document.getElementById('coCashInput').value)||0;
   const row  = document.getElementById('coChangeRow');
@@ -926,14 +890,12 @@ async function confirmCheckout(){
     if(data.success){
       rows.forEach(r => {
         const statusCell = r.querySelector('.status-cell');
-        // For billiard non-reserved: mark as Done
         if(r.dataset.source === 'billiard' && r.dataset.status !== 'Reserved'){
           r.dataset.status = 'Done';
           if(statusCell){
             statusCell.innerHTML = '<span class="status-done">Done</span><span class="paid-badge">✓ Paid</span>';
           }
         } else {
-          // For cafe / booking / reserved billiard: replace Not Paid with Paid
           if(statusCell){
             const unpaid = statusCell.querySelector('.unpaid-badge'); // removes "Pending"
             if(unpaid) unpaid.remove();
@@ -952,8 +914,6 @@ async function confirmCheckout(){
   btn.disabled = false;
   btn.textContent = '✅ Confirm Checkout';
 }
-
-// Thermal receipt builder
 const THERMAL_CSS = `
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:'Courier New',Courier,monospace;font-size:13px;color:#000;background:#fff;max-width:360px;margin:0 auto;padding:20px 16px;}
@@ -1031,9 +991,7 @@ ${paymentHtml}
 
 function openPrintWindow(bodyHtml) {
   const win = window.open('', '_blank', 'width=440,height=750');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Receipt</title><style>${THERMAL_CSS}/* Bell badge + popup */
-#bellBadge{position:absolute;top:5px;right:5px;background:#e07070;color:#fff;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center;pointer-events:none;z-index:20;}
-#bellPopup{display:none;position:fixed;left:76px;bottom:68px;z-index:99999;min-width:256px;max-width:310px;background:#1e1a14;color:#f5eedc;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(240,192,64,0.35);overflow:hidden;animation:fadeUp .25s ease both;}
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Receipt</title><style>${THERMAL_CSS}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -1085,7 +1043,6 @@ function openPrintWindow(bodyHtml) {
   <div id="bellPopupItems"></div>
 </div>
 <${'script'}>
-// Bell 5-min popup
 (function(){
   const shownIds = new Set();
   async function pollBell(){
@@ -1137,8 +1094,6 @@ async function printCheckout() {
       openPrintWindow(buildThermalHtml(data.orders, cash, discountAmt)); return;
     }
   } catch(e){}
-
-  // Fallback: use row attribute data
   const fallback = rows.map(r => ({
     code: r.dataset.code, total: parseFloat(r.dataset.amount)||0,
     items:[{name:r.dataset.desc, quantity:1, price:parseFloat(r.dataset.amount)||0, line_total:parseFloat(r.dataset.amount)||0}]
@@ -1217,8 +1172,6 @@ async function submitEdit(){
     }
   } catch(e){ alert('Server error.'); }
 }
-
-// Init pagination on load
 applyFilters();
 
 let _deleteTxRow = null;
@@ -1250,7 +1203,6 @@ document.getElementById('confirmTxDeleteBtn').addEventListener('click', async fu
   <div id="bellPopupItems"></div>
 </div>
 <script>
-// Bell 5-min popup
 (function(){
   const STORAGE_KEY = 'bellDismissed';
   const canonId = id => String(id).replace(/^done_/, '');

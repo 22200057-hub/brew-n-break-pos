@@ -17,7 +17,6 @@ $userRole = ucfirst(strtolower($_SESSION['role'] ?? 'admin'));
 try {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     if (!$conn->connect_error) {
-        // Add category column if missing
         $conn->query("ALTER TABLE products ADD COLUMN IF NOT EXISTS category VARCHAR(60) DEFAULT 'Coffee'");
         $conn->query("ALTER TABLE products ADD COLUMN IF NOT EXISTS description VARCHAR(255) DEFAULT ''");
         $conn->query("ALTER TABLE products ADD COLUMN IF NOT EXISTS available TINYINT(1) DEFAULT 1");
@@ -87,7 +86,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:background .2s;}
 .icon-btn:hover{background:rgba(255,255,255,0.7);}
 
-/* PRODUCT GRID */
 .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
 .product-card{background:rgba(255,255,255,0.45);border-radius:12px;padding:16px;border:1px solid rgba(0,0,0,0.08);transition:box-shadow .2s,transform .15s;position:relative;}
 .product-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.12);transform:translateY(-2px);}
@@ -105,7 +103,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .avail-yes{background:#d4edda;color:#2d6a4f;}
 .avail-no {background:#f8d7da;color:#721c24;}
 
-/* TABLE fallback for list view */
 .tbl-wrap{overflow-x:auto;display:none;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 thead tr{border-bottom:2px solid rgba(0,0,0,0.15);}
@@ -115,12 +112,10 @@ tbody tr:nth-child(even){background:var(--row-even);}
 tbody tr:hover{background:rgba(200,169,110,0.3);}
 tbody td{padding:10px 16px;}
 
-/* VIEW TOGGLE */
 .view-toggle{display:flex;gap:4px;}
 .view-btn{width:32px;height:32px;border-radius:7px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:background .2s;}
 .view-btn.active{background:var(--dark);color:var(--cream);}
 
-/* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--card-bg);border-radius:16px;padding:32px;width:min(420px,92vw);box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:fadeUp .3s ease both;}
@@ -146,9 +141,6 @@ tbody td{padding:10px 16px;}
 .btn-secondary{background:rgba(0,0,0,0.1);color:var(--text-dark);}
 .error-msg{color:#c0392b;font-size:12px;min-height:14px;margin-bottom:8px;}
 .empty-state{text-align:center;padding:40px;color:var(--muted);font-size:14px;}
-/* Bell badge + popup */
-#bellBadge{position:absolute;top:5px;right:5px;background:#e07070;color:#fff;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center;pointer-events:none;z-index:20;}
-#bellPopup{display:none;position:fixed;left:76px;bottom:68px;z-index:99999;min-width:256px;max-width:310px;background:#1e1a14;color:#f5eedc;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(240,192,64,0.35);overflow:hidden;animation:fadeUp .25s ease both;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -366,8 +358,6 @@ function updateClock(){
     now.toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'});
 }
 updateClock(); setInterval(updateClock,1000);
-
-// View toggle
 let currentView='grid';
 function setView(v){
   currentView=v;
@@ -376,8 +366,6 @@ function setView(v){
   document.getElementById('gridViewBtn').classList.toggle('active',v==='grid');
   document.getElementById('listViewBtn').classList.toggle('active',v==='list');
 }
-
-// Filter
 let currentCat='all';
 function filterCat(cat,btn){
   currentCat=cat;
@@ -393,8 +381,6 @@ function applyFilters(){
     el.style.display=(matchCat&&matchSearch)?'':'none';
   });
 }
-
-// Modal
 function openModal(){
   document.getElementById('modalTitle').textContent='Add Product';
   document.getElementById('editId').value='';
@@ -453,7 +439,6 @@ async function deleteProduct(id){
   <div id="bellPopupItems"></div>
 </div>
 <script>
-// Bell 5-min popup
 (function(){
   const STORAGE_KEY = 'bellDismissed';
   const canonId = id => String(id).replace(/^done_/, '');
@@ -498,5 +483,4 @@ async function deleteProduct(id){
 </script>
 </body>
 </html>
-
 

@@ -29,13 +29,10 @@ $userRole       = ucfirst(strtolower($_SESSION['role'] ?? 'admin'));
 try {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     if (!$conn->connect_error) {
-        // Today-only stats (reset each day)
         $r = $conn->query("SELECT COUNT(*) FROM orders WHERE DATE(created_at)=CURDATE()"); if ($r) $totalOrders = $r->fetch_row()[0];
         $r = $conn->query("SELECT COALESCE(SUM(TIME_TO_SEC(TIMEDIFF(end_time,start_time))/3600),0) FROM billiard_sessions WHERE DATE(created_at)=CURDATE() AND status IN ('Done','Ongoing','Start')"); if ($r) $totalHours = round($r->fetch_row()[0], 1);
         $r = $conn->query("SELECT COUNT(*) FROM bookings WHERE DATE(created_at)=CURDATE()"); if ($r) $totalBookings = $r->fetch_row()[0];
         $r = $conn->query("SELECT COALESCE(SUM(total_amount),0) FROM orders WHERE DATE(created_at)=CURDATE()"); if ($r) $totalRevenue = $r->fetch_row()[0];
-
-        // Auto-save yesterday's daily report if not already saved and data exists
         $yesterday = date('Y-m-d', strtotime('-1 day'));
         $chk = $conn->query("SELECT id FROM reports WHERE type='Daily Report' AND date_from='$yesterday' LIMIT 1");
         if ($chk && $chk->num_rows === 0) {
@@ -46,10 +43,7 @@ try {
                 $conn->query("INSERT INTO reports (report_code,type,date_from,date_to,created_at) VALUES ('$code','Daily Report','$yesterday','$yesterday',NOW())");
             }
         }
-
-        // Get live status from billiard_sessions (most recent ongoing/reserved per table)
         $allTables = ['Outdoor 1','Outdoor 2','Outdoor 3','Indoor 1'];
-        // Let MySQL calculate the remaining time using its own NOW() (correct local timezone)
         $r = $conn->query("
             SELECT
                 bs.table_name,
@@ -86,8 +80,6 @@ try {
         $r = $conn->query("SELECT COALESCE(SUM(total_amount),0) FROM orders WHERE DATE(created_at)=CURDATE()"); if ($r) $ordersRev = (float)$r->fetch_row()[0];
         $r = $conn->query("SELECT COALESCE(SUM(amount),0) FROM billiard_sessions WHERE DATE(created_at)=CURDATE()"); if ($r) $billiardRev = (float)$r->fetch_row()[0];
         $r = $conn->query("SELECT COALESCE(SUM(total_amount),0) FROM orders WHERE type='booking' AND DATE(created_at)=CURDATE()"); if ($r) $bookingRev = (float)$r->fetch_row()[0];
-
-        // Today's billiard schedule
         $billiardSchedule = [];
         $r = $conn->query("
             SELECT session_code, table_name, customer_name, start_time, end_time, status
@@ -96,8 +88,6 @@ try {
             ORDER BY FIELD(table_name,'Outdoor 1','Outdoor 2','Outdoor 3','Indoor 1'), start_time ASC
         ");
         if ($r) while ($row = $r->fetch_assoc()) $billiardSchedule[] = $row;
-
-        // Airbnb bookings for dashboard widget + calendar
         $airbnbBookings = [];
         $r = $conn->query("SELECT guest_name, check_in, check_out, status FROM bookings WHERE room='Airbnb' ORDER BY check_in ASC LIMIT 8");
         if ($r) while ($row = $r->fetch_assoc()) $airbnbBookings[] = $row;
@@ -111,7 +101,7 @@ try {
 
         $conn->close();
     }
-} catch (Throwable $e) { /* use defaults */ }
+} catch (Throwable $e) {  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -140,7 +130,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .user-label{font-size:14px;color:var(--cream);font-weight:300;}
 .user-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.12);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;color:var(--cream);font-size:18px;}
 
-/* LAYOUT — fills remaining height exactly */
 .layout{display:flex;flex:1;height:calc(100vh - var(--topnav-h));overflow:hidden;}
 .sidebar{width:var(--sidebar-w);background:var(--darker);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:4px;flex-shrink:0;border-right:1px solid rgba(255,255,255,0.05);z-index:10;}
 .nav-item{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:20px;cursor:pointer;text-decoration:none;transition:background .2s,color .2s;position:relative;}
@@ -151,7 +140,7 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .nav-spacer{flex:1;}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-/* MAIN — flex column, fills all space, no overflow */
+
 .main{
   flex:1;
   display:flex;
@@ -167,28 +156,23 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .page-title{font-family:'Playfair Display',serif;font-size:30px;color:var(--text-dark);}
 .page-time{font-size:13px;color:var(--text-mid);display:flex;align-items:center;gap:6px;}
 
-/* STAT CARDS — back to original size, fixed height */
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;flex-shrink:0;}
 .stat-card{background:var(--card-bg);border-radius:14px;padding:20px 24px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
 .stat-label{font-size:12px;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;}
 .stat-value{font-family:'Playfair Display',serif;font-size:34px;color:var(--text-dark);line-height:1;}
 
-/* MID ROW — equal flex with bottom row */
 .mid-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;flex:1;min-height:0;}
 .widget{background:var(--card-bg);border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.08);display:flex;flex-direction:column;overflow:hidden;min-height:0;}
 .widget-title{font-size:12px;font-weight:700;color:var(--text-mid);letter-spacing:.5px;margin-bottom:8px;flex-shrink:0;}
 
-/* DONUT — centered and fills space */
 .donut-wrap{display:flex;align-items:center;justify-content:center;gap:20px;flex:1;min-height:0;}
 .donut-canvas{flex-shrink:0;}
 .legend-wrap{display:flex;flex-direction:column;justify-content:center;}
 .legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-mid);margin-bottom:8px;}
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 
-/* BAR CHART */
 .bar-canvas-wrap{flex:1;min-height:0;position:relative;width:100%;}
 
-/* CALENDAR — fills the widget */
 .cal-header{text-align:center;font-family:'Playfair Display',serif;font-size:13px;color:var(--text-dark);margin-bottom:6px;flex-shrink:0;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0;text-align:center;flex:1;}
 .cal-day-label{font-size:9px;color:var(--muted);padding:3px 0;font-weight:700;}
@@ -202,11 +186,9 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .cal-day.booked-start .dn,.cal-day.booked-end .dn,.cal-day.booked-single .dn{background:var(--gold);color:var(--darker);font-weight:700;}
 .cal-day.booked-mid .dn{color:var(--darker);font-weight:600;}
 
-/* BOTTOM ROW — equal flex with mid row */
 .bottom-row{display:grid;grid-template-columns:1.6fr 1fr;gap:10px;flex:1;min-height:0;}
 .bottom-widget{background:var(--card-bg);border-radius:12px;padding:14px;box-shadow:0 2px 6px rgba(0,0,0,0.08);overflow:hidden;display:flex;flex-direction:column;}
 
-/* STATUS TABLE — fills bottom widget */
 .status-table{width:100%;border-collapse:collapse;font-size:12px;flex:1;}
 .status-table th{text-align:left;padding:8px 12px;color:var(--muted);font-size:10px;letter-spacing:.6px;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.1);}
 .status-table td{padding:10px 12px;border-bottom:1px solid rgba(0,0,0,0.04);}
@@ -222,7 +204,7 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .status-table th{text-align:left;padding:6px 10px;color:var(--muted);font-size:10px;letter-spacing:.6px;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.1);}
 .status-table td{padding:8px 10px;}
 .status-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
-/* BILLIARD SCHEDULE WIDGET */
+
 .sched-scroll{flex:1;overflow-y:auto;min-height:0;}
 .sched-scroll::-webkit-scrollbar{width:4px;}
 .sched-scroll::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.15);border-radius:4px;}
@@ -240,10 +222,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .sched-pending  {background:#fff3cd;color:#856404;}
 .sched-done     {background:#e2e3e5;color:#4a4e54;}
 .sched-empty{text-align:center;padding:24px 0;color:var(--muted);font-size:12px;font-style:italic;}
-
-/* Bell badge + popup */
-#bellBadge{position:absolute;top:5px;right:5px;background:#e07070;color:#fff;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center;pointer-events:none;z-index:20;}
-#bellPopup{display:none;position:fixed;left:76px;bottom:68px;z-index:99999;min-width:256px;max-width:310px;background:#1e1a14;color:#f5eedc;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(240,192,64,0.35);overflow:hidden;animation:fadeUp .25s ease both;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -537,12 +515,9 @@ function updateClock(){
     now.toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'});
 }
 updateClock(); setInterval(updateClock,1000);
-
-// Live countdown for billiard hours left
 function tickCountdowns(){
   document.querySelectorAll('.hours-left-cell').forEach(cell=>{
     const val = cell.dataset.endtime;
-    // Only tick if it looks like HH:MM:SS
     if(!val || !/^\d{2}:\d{2}:\d{2}$/.test(val)) return;
     const parts = val.split(':').map(Number);
     let total = parts[0]*3600 + parts[1]*60 + parts[2] - 1;
@@ -556,8 +531,6 @@ function tickCountdowns(){
   });
 }
 setInterval(tickCountdowns, 1000);
-
-// Live billiard status polling
 async function refreshBilliardStatus() {
   try {
     const res  = await fetch('/brew-n-break-pos/billiard_status.php');
@@ -614,8 +587,6 @@ new Chart(document.getElementById('barChart'),{
   const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('calHeader').textContent=months[month]+' '+year;
   const grid=document.getElementById('calGrid');
-
-  // Build role map: day → 'start'|'mid'|'end'|'single'
   const bookedRanges=<?= json_encode($bookedRanges) ?>;
   const dayRole={};
   bookedRanges.forEach(r=>{
@@ -627,10 +598,8 @@ new Chart(document.getElementById('barChart'),{
     visible.forEach((day,i)=>{
       const dow=new Date(year,month,day).getDay(); // 0=Sun,1=Mon
       const isFirst=i===0, isLast=i===visible.length-1;
-      // Week-boundary breaks: Sun can't connect right, Mon can't connect left
       const effStart=isFirst||(dow===1&&i>0);
       const effEnd  =isLast;
-      // effStart+effEnd: truly isolated day → 'single'; Monday wrapping from prev row → 'end'
       dayRole[day]=(effStart&&effEnd)?(i===0?'single':'end'):effStart?'start':effEnd?'end':'mid';
     });
   });
@@ -660,7 +629,6 @@ new Chart(document.getElementById('barChart'),{
   <div id="bellPopupItems"></div>
 </div>
 <script>
-// Bell 5-min popup
 (function(){
   const STORAGE_KEY = 'bellDismissed';
   const canonId = id => String(id).replace(/^done_/, '');

@@ -1,5 +1,4 @@
 <?php
-// One-time menu seeder — visit once then delete this file
 session_start();
 require_once __DIR__.'/auth.php';
 error_reporting(E_ALL);
@@ -18,7 +17,6 @@ $conn->query("ALTER TABLE products ADD COLUMN IF NOT EXISTS description VARCHAR(
 $conn->query("ALTER TABLE products ADD COLUMN IF NOT EXISTS available   TINYINT(1)   DEFAULT 1");
 
 $items = [
-    // Snacks & Bites
     ['Pork & Shrimp Siomai',      150, 'Snacks & Bites',    '6 pcs. large pork-shrimp siomai'],
     ['Mojos',                      180, 'Snacks & Bites',    'Thick-cut potato mojos'],
     ['Chicken Poppers',            220, 'Snacks & Bites',    'Served with fries'],
@@ -28,7 +26,6 @@ $items = [
     ['Barkada Fries',              150, 'Snacks & Bites',    'Good for 3-4 persons'],
     ['Cheese Flavour',              15, 'Snacks & Bites',    'Add-on flavour'],
     ['Sour Cream Flavour',          15, 'Snacks & Bites',    'Add-on flavour'],
-    // All Day Breakfast
     ['Cornsilog',  220, 'All Day Breakfast', 'Corned beef, garlic rice, 2 fried eggs'],
     ['Tosilog',    220, 'All Day Breakfast', 'Sweet pork tocino, garlic rice, 2 fried eggs'],
     ['Tapsilog',   220, 'All Day Breakfast', 'Beef tapa, garlic rice, 2 fried eggs'],

@@ -77,7 +77,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:background .2s;}
 .icon-btn:hover{background:rgba(255,255,255,0.7);}
 .tbl-wrap{overflow:visible;}
-#tableBody tr{display:none;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 thead tr{border-bottom:2px solid rgba(0,0,0,0.15);}
 thead th{text-align:left;padding:10px 16px;color:var(--text-mid);font-size:12px;letter-spacing:.6px;text-transform:uppercase;font-weight:700;}
@@ -95,7 +94,6 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .dropdown a.danger{color:#e07070;}
 .action-wrap.open .dropdown{display:block;}
 
-/* GENERATE REPORT MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:300;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
 .gen-modal{background:var(--card-bg);border-radius:16px;padding:28px 32px;width:min(380px,92vw);box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:fadeUp .3s ease both;}
@@ -113,7 +111,6 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .btn-cancel{background:var(--red);color:#fff;}
 .btn-cancel:hover{background:#5c1818;}
 
-/* REPORT VIEWER MODAL */
 .report-modal{background:#fff;border-radius:16px;width:min(580px,95vw);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:fadeUp .3s ease both;}
 .report-body{padding:36px 40px;color:#1a1410;font-family:'Lato',sans-serif;}
 .rep-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:2px solid #e8dcc8;margin-bottom:24px;}
@@ -138,23 +135,18 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
   .report-body{position:fixed;inset:0;padding:40px;}
   .rep-actions{display:none!important;}
 }
-/* DELETE CONFIRM MODAL */
+
 .del-modal{background:var(--card-bg);border-radius:16px;padding:28px 32px;width:min(360px,92vw);box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:fadeUp .3s ease both;}
 .del-modal-icon{font-size:40px;text-align:center;margin-bottom:12px;}
 .del-modal h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--text-dark);text-align:center;margin-bottom:8px;}
 .del-modal p{font-size:13px;color:var(--muted);text-align:center;margin-bottom:22px;line-height:1.5;}
 .del-modal .gen-actions{justify-content:center;gap:10px;margin-top:0;}
 
-/* PAGINATION */
 .pg-btn{padding:5px 11px;border-radius:7px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.4);cursor:pointer;font-size:13px;font-family:'Lato',sans-serif;font-weight:700;color:var(--text-dark);transition:background .2s;min-width:34px;}
 .pg-btn:hover:not(:disabled){background:rgba(255,255,255,0.7);}
 .pg-btn:disabled{opacity:.4;cursor:not-allowed;}
 .pg-btn.pg-active{background:var(--dark);color:var(--cream);border-color:transparent;}
 .pg-ellipsis{padding:0 4px;color:var(--muted);font-size:13px;line-height:1;display:inline-flex;align-items:center;}
-
-/* Bell badge + popup */
-#bellBadge{position:absolute;top:5px;right:5px;background:#e07070;color:#fff;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center;pointer-events:none;z-index:20;}
-#bellPopup{display:none;position:fixed;left:76px;bottom:68px;z-index:99999;min-width:256px;max-width:310px;background:#1e1a14;color:#f5eedc;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(240,192,64,0.35);overflow:hidden;animation:fadeUp .25s ease both;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -387,7 +379,6 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 <script>
 function toggleAvatarMenu(e){e.stopPropagation();var m=document.getElementById('avatarMenu');m.style.display=m.style.display==='none'?'block':'none';}
 document.addEventListener('click',function(){var m=document.getElementById('avatarMenu');if(m)m.style.display='none';});
-// Clock
 function updateClock(){
   const now=new Date();
   document.getElementById('liveClock').textContent=
@@ -395,8 +386,6 @@ function updateClock(){
     now.toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'});
 }
 updateClock(); setInterval(updateClock,1000);
-
-// Search + Pagination
 const PER_PAGE = 13;
 let currentPage = 1;
 let _filteredRows = [];
@@ -449,8 +438,6 @@ function goToPage(n){
   renderPage();
   renderPagination();
 }
-
-// Dropdown — fixed positioning
 function toggleDD(id, btn){
   const wrap = document.getElementById('wrap-'+id);
   const dd   = wrap.querySelector('.dropdown');
@@ -467,11 +454,8 @@ function toggleDD(id, btn){
 document.addEventListener('click',e=>{
   if(!e.target.closest('.action-wrap')) document.querySelectorAll('.action-wrap').forEach(w=>w.classList.remove('open'));
 });
-
-// Generate modal
 function openGenModal(){
   document.getElementById('genError').textContent='';
-  // Set default dates
   const today=new Date().toISOString().split('T')[0];
   const monthAgo=new Date(Date.now()-30*864e5).toISOString().split('T')[0];
   document.getElementById('gStart').value=monthAgo;
@@ -500,8 +484,6 @@ async function submitReport(){
   if(data.success){ closeGenModal(); location.reload(); }
   else errEl.textContent=data.message||'Failed to generate report.';
 }
-
-// View report
 let _currentReportId = null;
 async function viewReport(row){
   _currentReportId = row.dataset.id;
@@ -513,8 +495,6 @@ async function viewReport(row){
   const from = new Date(row.dataset.from).toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'});
   const to   = new Date(row.dataset.to).toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'});
   document.getElementById('repPeriod').textContent = `${from} – ${to}`;
-
-  // Fetch transactions for date range
   const res  = await fetch('report_action.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'fetch',start:row.dataset.from,end:row.dataset.to,type:row.dataset.type})});
   const data = await res.json();
 
@@ -570,7 +550,6 @@ applySearch();
   <div id="bellPopupItems"></div>
 </div>
 <script>
-// Bell 5-min popup
 (function(){
   const STORAGE_KEY = 'bellDismissed';
   const canonId = id => String(id).replace(/^done_/, '');
@@ -615,5 +594,4 @@ applySearch();
 </script>
 </body>
 </html>
-
 

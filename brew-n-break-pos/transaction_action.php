@@ -51,8 +51,6 @@ try {
             $itemId     = intval($item['id'] ?? 0);
             $itemSource = $item['source'] ?? '';
             if ($itemSource === 'billiard' && $itemId) {
-                // Check current status — Reserved sessions stay Reserved after payment
-                // (customer paid upfront but hasn't played yet); only mark Done if already started
                 $sr = $conn->prepare("SELECT status, table_name FROM billiard_sessions WHERE id=?");
                 $sr->bind_param('i', $itemId);
                 $sr->execute();
@@ -61,7 +59,6 @@ try {
                 $sr->close();
 
                 if ($curStatus !== 'Reserved') {
-                    // Session was active — mark as Done and free the table
                     $stmt = $conn->prepare("UPDATE billiard_sessions SET status='Done' WHERE id=?");
                     $stmt->bind_param('i', $itemId);
                     $stmt->execute();
@@ -71,7 +68,6 @@ try {
                         $u->execute();
                     }
                 }
-                // If Reserved: status stays Reserved, table stays Reserved — they just paid early
             }
         }
         echo json_encode(['success' => true]);

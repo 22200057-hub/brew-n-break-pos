@@ -73,13 +73,11 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .page-title{font-family:'Playfair Display',serif;font-size:30px;color:var(--text-dark);}
 .page-time{font-size:13px;color:var(--text-mid);display:flex;align-items:center;gap:6px;}
 
-/* SETTINGS CARD */
 .settings-card{background:var(--card-bg);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
 .settings-tab-bar{background:rgba(0,0,0,0.06);padding:10px 20px 0;border-bottom:2px solid rgba(0,0,0,0.1);}
 .settings-tab{display:inline-block;padding:9px 22px;font-size:13px;font-weight:700;color:var(--text-mid);border-radius:8px 8px 0 0;background:var(--card-bg);border:1px solid rgba(0,0,0,0.1);border-bottom:none;cursor:pointer;}
 .settings-body{padding:28px 32px 32px;}
 
-/* PHOTO UPLOAD */
 .photo-section{margin-bottom:28px;}
 .photo-label{font-size:13px;color:var(--text-mid);margin-bottom:10px;font-weight:600;}
 .photo-box{
@@ -97,7 +95,7 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .photo-box span{font-size:11px;color:var(--muted);text-align:center;line-height:1.3;}
 .photo-box .photo-icon{font-size:26px;}
 .photo-preview{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:50%;}
-/* PHOTO MODAL */
+
 .photo-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
 .photo-modal-overlay.open{display:flex;}
 .photo-modal{background:var(--card-bg);border-radius:20px;padding:32px 36px;text-align:center;width:min(340px,92vw);box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:popIn .22s ease both;}
@@ -113,7 +111,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .btn-close-photo{padding:9px 0;border-radius:10px;border:none;background:transparent;color:var(--muted);font-size:13px;font-family:'Lato',sans-serif;cursor:pointer;transition:color .2s;}
 .btn-close-photo:hover{color:var(--text-dark);}
 
-/* FORM GRID */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 28px;}
 .form-group{display:flex;flex-direction:column;gap:6px;}
 .form-group label{font-size:12px;color:var(--text-mid);font-weight:600;}
@@ -132,7 +129,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .form-group input:focus{border-color:var(--gold);}
 .form-group input[readonly]{background:rgba(255,255,255,0.3);color:var(--muted);cursor:not-allowed;}
 
-/* PHONE ROW */
 .phone-wrap{display:flex;gap:0;}
 .phone-prefix{
   background:var(--input-bg);border:1px solid rgba(0,0,0,0.12);
@@ -142,10 +138,8 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 }
 .phone-wrap input{border-radius:0 8px 8px 0;}
 
-/* DIVIDER */
 .divider{border:none;border-top:1px solid rgba(0,0,0,0.1);margin:24px 0;}
 
-/* FOOTER */
 .settings-footer{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
 .btn-logout{
   display:flex;align-items:center;gap:8px;
@@ -164,7 +158,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .btn-update{background:var(--green);color:#fff;}
 .btn-update:hover{background:#2d5438;}
 
-/* TOAST */
 .toast{
   position:fixed;bottom:28px;right:28px;
   background:var(--dark);color:var(--cream);
@@ -178,10 +171,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .toast.show{opacity:1;transform:translateY(0);}
 
 .error-msg{color:#c0392b;font-size:12px;margin-top:8px;min-height:16px;}
-
-/* Confirmation modals */
-#logoutModal,#updateModal,#resetModal{display:none;position:fixed;inset:0;z-index:99998;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);backdrop-filter:blur(3px);}
-#logoutModal.active,#updateModal.active,#resetModal.active{display:flex;}
 .lo-box{background:var(--card-bg);border-radius:18px;padding:32px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);max-width:320px;width:90%;animation:popIn .22s ease both;}
 .lo-icon{font-size:42px;margin-bottom:14px;}
 .lo-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--text-dark);margin-bottom:8px;}
@@ -192,9 +181,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .lo-confirm{flex:1;padding:10px 0;border-radius:10px;border:none;background:var(--dark);color:var(--cream);font-size:13px;font-weight:700;cursor:pointer;transition:background .2s;}
 .lo-confirm:hover{background:#2e2820;}
 @keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
-/* Bell badge + popup */
-#bellBadge{position:absolute;top:5px;right:5px;background:#e07070;color:#fff;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center;pointer-events:none;z-index:20;}
-#bellPopup{display:none;position:fixed;left:76px;bottom:68px;z-index:99999;min-width:256px;max-width:310px;background:#1e1a14;color:#f5eedc;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(240,192,64,0.35);overflow:hidden;animation:fadeUp .25s ease both;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -411,15 +397,12 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 </div>
 
 <script>
-// Store originals for reset
 const original = {
   firstName: document.getElementById('fFirstName').value,
   lastName:  document.getElementById('fLastName').value,
   username:  document.getElementById('fUsername').value,
   phone:     document.getElementById('fPhone').value,
 };
-
-// Clock
 function updateClock(){
   const now=new Date();
   document.getElementById('liveClock').textContent=
@@ -437,20 +420,16 @@ function closePhotoModal(){ document.getElementById('photoModalOverlay').classLi
 function removePhoto(){
   _removePhoto  = true;
   _pendingPhoto = '';
-  // Clear preview in photo box
   const prev = document.getElementById('photoPreview');
   prev.src=''; prev.style.display='none';
   const icon = document.querySelector('.photo-box .photo-icon');
   if(icon) icon.style.display='';
-  // Clear modal preview
   const mp = document.getElementById('photoModalPreview');
   mp.innerHTML='<div class="photo-modal-placeholder">🖼️</div>';
   document.getElementById('removePhotoBtn').style.display='none';
   updateNavAvatar(null);
   closePhotoModal();
 }
-
-// Photo preview
 function previewPhoto(input){
   const file=input.files[0];
   if(!file) return;
@@ -458,12 +437,10 @@ function previewPhoto(input){
   const reader=new FileReader();
   reader.onload=e=>{
     _pendingPhoto = e.target.result;
-    // Update photo box
     const img=document.getElementById('photoPreview');
     img.src=_pendingPhoto; img.style.display='block';
     const icon=document.querySelector('.photo-box .photo-icon');
     if(icon) icon.style.display='none';
-    // Update modal preview
     const mp=document.getElementById('photoModalPreview');
     mp.innerHTML=`<img class="photo-modal-img" src="${_pendingPhoto}" alt=""/>`;
     document.getElementById('removePhotoBtn').style.display='';
@@ -491,8 +468,6 @@ function updateNavAvatar(src){
   const emoji=document.getElementById('navAvatarEmoji');
   if(emoji) emoji.style.display='none';
 }
-
-// Reset form
 function resetForm(){
   document.getElementById('fFirstName').value = original.firstName;
   document.getElementById('fLastName').value  = original.lastName;
@@ -502,8 +477,6 @@ function resetForm(){
   document.getElementById('errorMsg').textContent = '';
   showToast('Form reset to original values.');
 }
-
-// Update profile
 async function updateProfile(){
   const firstName = document.getElementById('fFirstName').value.trim();
   const lastName  = document.getElementById('fLastName').value.trim();
@@ -535,20 +508,12 @@ async function updateProfile(){
     errEl.textContent=data.message||'Update failed.';
   }
 }
-
-// Logout modal
 function confirmLogout(){ document.getElementById('logoutModal').classList.add('active'); }
 function hideLogoutModal(){ document.getElementById('logoutModal').classList.remove('active'); }
-
-// Update modal
 function confirmUpdate(){ document.getElementById('updateModal').classList.add('active'); }
 function hideUpdateModal(){ document.getElementById('updateModal').classList.remove('active'); }
-
-// Reset modal
 function confirmReset(){ document.getElementById('resetModal').classList.add('active'); }
 function hideResetModal(){ document.getElementById('resetModal').classList.remove('active'); }
-
-// Toast
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;
@@ -564,7 +529,6 @@ function showToast(msg){
   <div id="bellPopupItems"></div>
 </div>
 <script>
-// Bell 5-min popup
 (function(){
   const STORAGE_KEY = 'bellDismissed';
   const canonId = id => String(id).replace(/^done_/, '');
@@ -609,5 +573,4 @@ function showToast(msg){
 </script>
 </body>
 </html>
-
 

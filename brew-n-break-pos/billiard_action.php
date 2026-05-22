@@ -1,5 +1,4 @@
 <?php
-// billiard_action.php
 session_start();
 error_reporting(0);
 ini_set('display_errors', 0);
@@ -42,8 +41,6 @@ try {
         $stmt   = $conn->prepare("UPDATE billiard_sessions SET status=? WHERE id=?");
         $stmt->bind_param('si', $status, $id);
         $stmt->execute();
-
-        // Update billiard_tables status too
         $r = $conn->query("SELECT table_name FROM billiard_sessions WHERE id=$id");
         if ($r) {
             $row = $r->fetch_assoc();

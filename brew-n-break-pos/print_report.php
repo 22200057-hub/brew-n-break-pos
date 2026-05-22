@@ -76,8 +76,6 @@ try {
 
     $conn->close();
 } catch (Throwable $e) { echo 'Server error.'; exit; }
-
-// Aggregates
 $totalRevenue   = array_sum(array_column($transactions, 'amount'));
 $totalCount     = count($transactions);
 $doneCount      = count(array_filter($transactions, fn($t) => strtolower($t['status']) === 'done'));
@@ -104,7 +102,6 @@ $dateTo      = date('F d, Y', strtotime($report['date_to']));
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-/* Screen styles */
 body{
   font-family:'Lato',sans-serif;
   background:#d4c8b0;
@@ -121,7 +118,6 @@ body{
   overflow:hidden;
 }
 
-/* Print toolbar (screen only) */
 .print-bar{
   background:#1e1a14;
   display:flex;
@@ -141,10 +137,8 @@ body{
 .pb-back{background:rgba(255,255,255,0.1);color:#f5eedc;}
 .pb-back:hover{background:rgba(255,255,255,0.18);}
 
-/* Report document */
 .doc{padding:44px 52px;}
 
-/* Document header */
 .doc-header{
   display:flex;justify-content:space-between;align-items:flex-start;
   padding-bottom:24px;border-bottom:2.5px solid #e8dcc8;margin-bottom:28px;
@@ -161,7 +155,6 @@ body{
   padding:4px 14px;border-radius:6px;margin-bottom:6px;
 }
 
-/* Section title */
 .sec-title{
   font-size:10px;letter-spacing:2px;text-transform:uppercase;
   color:#7a6e5f;font-weight:700;margin:24px 0 12px;
@@ -169,7 +162,6 @@ body{
 }
 .sec-title::after{content:'';flex:1;height:1px;background:#e8dcc8;}
 
-/* Summary grid */
 .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:4px;}
 .sum-card{
   background:#f9f5ee;border-radius:10px;padding:14px 16px;
@@ -179,7 +171,6 @@ body{
 .sum-value{font-family:'Playfair Display',serif;font-size:22px;color:#1e1a14;}
 .sum-value.revenue{font-size:18px;}
 
-/* Status breakdown */
 .status-row{display:flex;gap:10px;margin-bottom:4px;flex-wrap:wrap;}
 .status-pill{
   font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;
@@ -190,14 +181,12 @@ body{
 .sp-cancelled{background:#fdedec;color:#921515;border:1px solid #f5b7b1;}
 .sp-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
 
-/* Type breakdown */
 .type-row{display:flex;gap:10px;flex-wrap:wrap;}
 .type-chip{font-size:11px;padding:3px 10px;border-radius:6px;font-weight:700;}
 .tc-cafe    {background:#e8f4fd;color:#1a5276;border:1px solid #aad4f0;}
 .tc-billiard{background:#fdf2e9;color:#784212;border:1px solid #f0c898;}
 .tc-booking {background:#f4ecf7;color:#6c3483;border:1px solid #d2b4de;}
 
-/* Transactions table */
 .tx-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px;}
 .tx-table thead tr{background:#1e1a14;}
 .tx-table th{
@@ -229,7 +218,6 @@ body{
 .st-start    {background:#fdf2e9;color:#784212;}
 .no-data{text-align:center;padding:32px;color:#7a6e5f;font-style:italic;}
 
-/* Total row */
 .total-row td{
   background:#1e1a14!important;color:#c8a96e!important;
   font-family:'Playfair Display',serif;font-size:14px;font-weight:700;
@@ -238,13 +226,11 @@ body{
 .total-row td:first-child{border-radius:0 0 0 8px;}
 .total-row td:last-child{border-radius:0 0 8px 0;text-align:right!important;}
 
-/* Footer */
 .doc-footer{
   margin-top:40px;padding-top:18px;border-top:1px solid #e8dcc8;
   text-align:center;font-size:11px;color:#7a6e5f;line-height:1.9;
 }
 
-/* =================== PRINT STYLES =================== */
 @media print {
   body{background:#fff;padding:0;}
   .page-wrap{border-radius:0;box-shadow:none;max-width:100%;}
@@ -285,7 +271,6 @@ body{
         <div class="brand-name">🎱 Brew n' Break</div>
         <div class="brand-sub">By Bamboo Court</div>
         <div class="brand-addr">
-          #17 Bamboo Court, Philippines<br/>
           facebook.com/brewnbreak
         </div>
       </div>

@@ -1,5 +1,4 @@
 <?php
-// cafe_action.php
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -20,8 +19,6 @@ try {
         echo json_encode(['success'=>false,'message'=>'DB connection failed: '.$conn->connect_error]);
         exit;
     }
-
-    // Ensure tables exist
     $conn->query("CREATE TABLE IF NOT EXISTS products (
         id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(120) NOT NULL,
@@ -71,8 +68,6 @@ try {
             $qty   = intval($item['qty']   ?? 1);
             $price = floatval($item['price'] ?? 0);
             if (!$name) continue;
-
-            // Find or create product
             $esc = $conn->real_escape_string($name);
             $r   = $conn->query("SELECT id FROM products WHERE name='$esc' LIMIT 1");
             if ($r && $r->num_rows > 0) {
@@ -107,11 +102,7 @@ try {
         $id = intval($input['id'] ?? 0);
 
         if (!$id) { echo json_encode(['success'=>false,'message'=>'Invalid order ID.']); exit; }
-
-        // Delete items first
         $conn->query("DELETE FROM order_items WHERE order_id=$id");
-
-        // Delete order
         $stmt = $conn->prepare("DELETE FROM orders WHERE id=?");
         if (!$stmt) { echo json_encode(['success'=>false,'message'=>'Prepare failed: '.$conn->error]); exit; }
         $stmt->bind_param('i', $id);

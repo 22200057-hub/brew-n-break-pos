@@ -18,7 +18,6 @@ $currentTable = $_GET['table'] ?? 'all';
 try {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     if (!$conn->connect_error) {
-        // Auto-complete only sessions that have been manually started (not Reserved)
         $conn->query("UPDATE billiard_sessions SET status='Done' WHERE status IN ('Start','Ongoing') AND DATE(created_at)=CURDATE() AND TIME(NOW())>end_time");
 
         if ($currentTable === 'all') {
@@ -86,7 +85,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:background .2s;}
 .icon-btn:hover{background:rgba(255,255,255,0.7);}
 .tbl-wrap{overflow:visible;}
-#tableBody tr{display:none;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 thead tr{border-bottom:2px solid rgba(0,0,0,0.15);}
 thead th{text-align:left;padding:10px 16px;color:var(--text-mid);font-size:12px;letter-spacing:.6px;text-transform:uppercase;font-weight:700;}
@@ -108,7 +106,6 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .dropdown a.danger{color:#e07070;}
 .action-wrap.open .dropdown{display:block;}
 
-/* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--card-bg);border-radius:16px;padding:32px;width:min(460px,92vw);box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:fadeUp .3s ease both;}
@@ -124,9 +121,6 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .btn-primary:hover{background:#3a3020;}
 .btn-secondary{background:rgba(0,0,0,0.1);color:var(--text-dark);}
 .error-msg{color:#c0392b;font-size:12px;min-height:16px;margin-bottom:8px;}
-/* Delete session modal */
-#delBilliardOverlay{display:none;position:fixed;inset:0;z-index:99998;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);backdrop-filter:blur(3px);}
-#delBilliardOverlay.open{display:flex;}
 .del-modal{background:var(--card-bg);border-radius:18px;padding:32px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);max-width:320px;width:90%;animation:popIn .22s ease both;}
 .del-modal-icon{font-size:42px;margin-bottom:14px;}
 .del-modal-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--text-dark);margin-bottom:8px;}
@@ -137,15 +131,12 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .del-modal-confirm{flex:1;padding:10px 0;border-radius:10px;border:none;background:#7b1c1c;color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s;}
 .del-modal-confirm:hover{background:#9b2c2c;}
 @keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
-/* PAGINATION */
+
 .pg-btn{padding:5px 11px;border-radius:7px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.4);cursor:pointer;font-size:13px;font-family:'Lato',sans-serif;font-weight:700;color:var(--text-dark);transition:background .2s;min-width:34px;}
 .pg-btn:hover:not(:disabled){background:rgba(255,255,255,0.7);}
 .pg-btn:disabled{opacity:.4;cursor:not-allowed;}
 .pg-btn.pg-active{background:var(--dark);color:var(--cream);border-color:transparent;}
 .pg-ellipsis{padding:0 4px;color:var(--muted);font-size:13px;line-height:1;display:inline-flex;align-items:center;}
-/* Bell badge + popup */
-#bellBadge{position:absolute;top:5px;right:5px;background:#e07070;color:#fff;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center;pointer-events:none;z-index:20;}
-#bellPopup{display:none;position:fixed;left:76px;bottom:68px;z-index:99999;min-width:256px;max-width:310px;background:#1e1a14;color:#f5eedc;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(240,192,64,0.35);overflow:hidden;animation:fadeUp .25s ease both;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -288,7 +279,6 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
           const thStyle = {textAlign:'left',padding:'10px 16px',color:'var(--muted)',fontSize:'10px',letterSpacing:'.6px',textTransform:'uppercase',borderBottom:'2px solid rgba(0,0,0,0.15)',fontWeight:700};
 
           useEffect(() => {
-            // After React renders the rows, trigger search/pagination
             if (typeof window.applySearch === 'function') window.applySearch();
           }, []);
 
@@ -453,7 +443,6 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 <script>
 function toggleAvatarMenu(e){e.stopPropagation();var m=document.getElementById('avatarMenu');m.style.display=m.style.display==='none'?'block':'none';}
 document.addEventListener('click',function(){var m=document.getElementById('avatarMenu');if(m)m.style.display='none';});
-// Clock
 function updateClock(){
   const now=new Date();
   document.getElementById('liveClock').textContent=
@@ -461,8 +450,6 @@ function updateClock(){
     now.toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'});
 }
 updateClock(); setInterval(updateClock,1000);
-
-// Search + Pagination
 const PER_PAGE = 13;
 let currentPage = 1;
 let _filteredRows = [];
@@ -515,8 +502,6 @@ function goToPage(n){
   renderPage();
   renderPagination();
 }
-
-// Dropdown — fixed positioning
 function toggleDD(id, btn){
   const wrap = document.getElementById('wrap-'+id);
   const dd   = wrap.querySelector('.dropdown');
@@ -533,15 +518,11 @@ function toggleDD(id, btn){
 document.addEventListener('click',e=>{
   if(!e.target.closest('.action-wrap')) document.querySelectorAll('.action-wrap').forEach(w=>w.classList.remove('open'));
 });
-
-// Set rate based on selected table
 function setRateByTable(table){
   const rate = table === 'Indoor 1' ? 180 : 100;
   document.getElementById('fRate').value = rate;
   calcAmount();
 }
-
-// Auto-calculate amount from rate × hours
 function calcAmount(){
   const start = document.getElementById('fStart').value;
   const end   = document.getElementById('fEnd').value;
@@ -574,8 +555,6 @@ function calcAmount(){
   document.getElementById('fAmountDisplay').textContent = '₱'+parseFloat(amount).toLocaleString('en-PH',{minimumFractionDigits:2});
   document.getElementById('fAmount').value             = amount;
 }
-
-// Modal
 async function openModal(){
   document.getElementById('modalTitle').textContent='Add Session';
   document.getElementById('editId').value='';
@@ -591,7 +570,6 @@ async function openModal(){
   document.getElementById('fStatus').value='Start';
   document.getElementById('modalError').textContent='';
   document.getElementById('modalOverlay').classList.add('open');
-  // Fetch next auto code
   try {
     const r = await fetch('billiard_action.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'next_code'})});
     const d = await r.json();
@@ -650,7 +628,6 @@ document.getElementById('confirmDelBilliardBtn').addEventListener('click', async
   if(data.success) location.reload();
   else alert(data.message||'Delete failed.');
 });
-// applySearch() is now called by React after it finishes rendering
 </script>
 <div id="bellPopup">
   <div class="bp-header">
@@ -660,7 +637,6 @@ document.getElementById('confirmDelBilliardBtn').addEventListener('click', async
   <div id="bellPopupItems"></div>
 </div>
 <script>
-// Bell 5-min popup
 (function(){
   const STORAGE_KEY = 'bellDismissed';
   const canonId = id => String(id).replace(/^done_/, '');

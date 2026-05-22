@@ -78,7 +78,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:background .2s;}
 .icon-btn:hover{background:rgba(255,255,255,0.7);}
 .tbl-wrap{overflow:visible;}
-#tableBody tr{display:none;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 thead tr{border-bottom:2px solid rgba(0,0,0,0.15);}
 thead th{text-align:left;padding:10px 16px;color:var(--text-mid);font-size:12px;letter-spacing:.6px;text-transform:uppercase;font-weight:700;}
@@ -99,7 +98,6 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .dropdown a.danger{color:#e07070;}
 .action-wrap.open .dropdown{display:block;}
 
-/* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--card-bg);border-radius:16px;padding:32px;width:min(500px,92vw);box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:fadeUp .3s ease both;max-height:90vh;overflow-y:auto;}
@@ -110,7 +108,6 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .form-group input,.form-group select{background:rgba(255,255,255,0.55);border:1px solid rgba(0,0,0,0.15);border-radius:8px;padding:10px 12px;font-size:14px;font-family:'Lato',sans-serif;color:var(--text-dark);outline:none;transition:border-color .2s;width:100%;}
 .form-group input:focus,.form-group select:focus{border-color:var(--gold);}
 
-/* PRODUCT ITEM ROW with autocomplete */
 .items-label{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:700;}
 .item-row{display:grid;grid-template-columns:1fr 70px 90px 28px;gap:6px;margin-bottom:8px;align-items:start;}
 .item-row .prod-field-wrap{position:relative;}
@@ -119,7 +116,6 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .item-row input[type=number]{background:rgba(255,255,255,0.55);border:1px solid rgba(0,0,0,0.15);border-radius:8px;padding:9px 8px;font-size:13px;font-family:'Lato',sans-serif;color:var(--text-dark);outline:none;width:100%;}
 .remove-item{background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;padding:0;line-height:1;margin-top:8px;}
 
-/* AUTOCOMPLETE DROPDOWN */
 .autocomplete-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid rgba(0,0,0,0.15);border-radius:0 0 8px 8px;box-shadow:0 8px 20px rgba(0,0,0,0.12);z-index:100;max-height:180px;overflow-y:auto;display:none;}
 .autocomplete-list.open{display:block;}
 .ac-item{padding:9px 12px;cursor:pointer;font-size:13px;display:flex;justify-content:space-between;align-items:center;transition:background .15s;}
@@ -137,7 +133,7 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .btn-secondary{background:rgba(0,0,0,0.1);color:var(--text-dark);}
 .error-msg{color:#c0392b;font-size:12px;min-height:14px;margin-bottom:8px;}
 .total-preview{background:rgba(0,0,0,0.06);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-weight:700;}
-/* DELETE ORDER MODAL */
+
 .del-order-modal{background:var(--card-bg);border-radius:16px;padding:28px 32px;width:min(360px,92vw);box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:fadeUp .3s ease both;}
 .del-order-icon{font-size:40px;text-align:center;margin-bottom:12px;}
 .del-order-modal h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--text-dark);text-align:center;margin-bottom:8px;}
@@ -149,16 +145,11 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 .btn-del-confirm:hover{background:#5c1818;}
 .btn-del-confirm:disabled{opacity:.6;cursor:not-allowed;}
 
-/* PAGINATION */
 .pg-btn{padding:5px 11px;border-radius:7px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.4);cursor:pointer;font-size:13px;font-family:'Lato',sans-serif;font-weight:700;color:var(--text-dark);transition:background .2s;min-width:34px;}
 .pg-btn:hover:not(:disabled){background:rgba(255,255,255,0.7);}
 .pg-btn:disabled{opacity:.4;cursor:not-allowed;}
 .pg-btn.pg-active{background:var(--dark);color:var(--cream);border-color:transparent;}
 .pg-ellipsis{padding:0 4px;color:var(--muted);font-size:13px;line-height:1;display:inline-flex;align-items:center;}
-
-/* Bell badge + popup */
-#bellBadge{position:absolute;top:5px;right:5px;background:#e07070;color:#fff;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center;pointer-events:none;z-index:20;}
-#bellPopup{display:none;position:fixed;left:76px;bottom:68px;z-index:99999;min-width:256px;max-width:310px;background:#1e1a14;color:#f5eedc;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(240,192,64,0.35);overflow:hidden;animation:fadeUp .25s ease both;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -392,7 +383,6 @@ tbody td{padding:11px 16px;color:var(--text-dark);}
 <script>
 function toggleAvatarMenu(e){e.stopPropagation();var m=document.getElementById('avatarMenu');m.style.display=m.style.display==='none'?'block':'none';}
 document.addEventListener('click',function(){var m=document.getElementById('avatarMenu');if(m)m.style.display='none';});
-// Clock
 function updateClock(){
   const now=new Date();
   document.getElementById('liveClock').textContent=
@@ -400,8 +390,6 @@ function updateClock(){
     now.toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'});
 }
 updateClock(); setInterval(updateClock,1000);
-
-// All products from DB (loaded when modal opens)
 let allProducts = [];
 async function loadProducts(){
   if(allProducts.length) return;
@@ -410,7 +398,6 @@ async function loadProducts(){
     const data = await res.json();
     if(data.success) allProducts = data.products;
   } catch(e){}
-  // Fallback sample if DB empty
   if(!allProducts.length) allProducts=[
     {id:1,name:'Matcha Latte',price:150,category:'Coffee'},
     {id:2,name:'Oat Honey Latte',price:160,category:'Coffee'},
@@ -472,14 +459,10 @@ function goToPage(n){
   renderPage();
   renderPagination();
 }
-
-// Dropdown — fixed positioning to avoid table clipping
 function toggleDD(id, btn){
   const wrap = document.getElementById('wrap-'+id);
   const dd   = wrap.querySelector('.dropdown');
   const isOpen = wrap.classList.contains('open');
-
-  // Close all first
   document.querySelectorAll('.action-wrap').forEach(w=>w.classList.remove('open'));
   document.querySelectorAll('.dropdown').forEach(d=>{ d.style.top=''; d.style.left=''; });
 
@@ -495,8 +478,6 @@ document.addEventListener('click',e=>{
     document.querySelectorAll('.action-wrap').forEach(w=>w.classList.remove('open'));
   }
 });
-
-// Add item row with autocomplete
 let rowCount=0;
 function addItemRow(defaultName='', defaultPrice='', defaultQty=1){
   const id='row-'+(rowCount++);
@@ -522,7 +503,6 @@ function addItemRow(defaultName='', defaultPrice='', defaultQty=1){
 function handleSearch(input, rowId){
   const q=input.value.toLowerCase().trim();
   const list=document.getElementById('ac-'+rowId);
-  // Close all other lists
   document.querySelectorAll('.autocomplete-list').forEach(l=>{ if(l.id!=='ac-'+rowId) l.classList.remove('open'); });
 
   const filtered = q ? allProducts.filter(p=>p.name.toLowerCase().includes(q)) : allProducts;
@@ -568,8 +548,6 @@ function calcTotal(){
   document.getElementById('totalPreview').textContent='₱'+total.toLocaleString('en-PH',{minimumFractionDigits:2});
   document.getElementById('fTotal') && (document.getElementById('fTotal').value=total.toFixed(2));
 }
-
-// Modal
 async function openModal(){
   await loadProducts();
   document.getElementById('fOrderCode').value='…';
@@ -580,7 +558,6 @@ async function openModal(){
   rowCount=0;
   addItemRow();
   document.getElementById('modalOverlay').classList.add('open');
-  // Fetch next auto code
   try {
     const r = await fetch('cafe_action.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'next_code'})});
     const d = await r.json();
@@ -606,8 +583,6 @@ async function submitOrder(){
 
   if(!orderCode||orderCode==='…'){ errEl.textContent='Auto-code loading, please wait.'; return; }
   if(!type){ errEl.textContent='Please select a type.'; return; }
-
-  // Collect items
   const items=[];
   let total=0;
   document.querySelectorAll('.item-row').forEach(row=>{
@@ -660,7 +635,6 @@ applyFilters();
   <div id="bellPopupItems"></div>
 </div>
 <script>
-// Bell 5-min popup
 (function(){
   const STORAGE_KEY = 'bellDismissed';
   const canonId = id => String(id).replace(/^done_/, '');
@@ -705,5 +679,4 @@ applyFilters();
 </script>
 </body>
 </html>
-
 

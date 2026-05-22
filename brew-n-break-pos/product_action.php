@@ -16,8 +16,6 @@ $action = $input['action'] ?? '';
 try {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     if ($conn->connect_error) throw new Exception('DB error');
-
-    // Ensure columns exist
     $conn->query("ALTER TABLE products ADD COLUMN IF NOT EXISTS category VARCHAR(60) DEFAULT 'Coffee'");
     $conn->query("ALTER TABLE products ADD COLUMN IF NOT EXISTS description VARCHAR(255) DEFAULT ''");
     $conn->query("ALTER TABLE products ADD COLUMN IF NOT EXISTS available TINYINT(1) DEFAULT 1");
@@ -57,7 +55,6 @@ try {
         echo json_encode(['success'=>true]);
 
     } elseif ($action === 'list') {
-        // Return all available products as JSON (for dropdown in orders)
         $r = $conn->query("SELECT id, name, price, category FROM products WHERE available=1 ORDER BY category, name");
         $products = [];
         if ($r) while ($row = $r->fetch_assoc()) $products[] = $row;

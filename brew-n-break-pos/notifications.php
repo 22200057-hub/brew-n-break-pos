@@ -17,7 +17,6 @@ $userRole      = ucfirst(strtolower($_SESSION['role'] ?? 'admin'));
 try {
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     if (!$conn->connect_error) {
-        // Fetch ongoing sessions and check expiry using MySQL time
         $r = $conn->query("
             SELECT
                 bs.id,
@@ -66,7 +65,6 @@ try {
                 'customer'   => $row['customer_name'],
             ];
         }
-        // Recently ended sessions (Done, ended within last 2 hours today)
         $r = $conn->query("
             SELECT
                 bs.id,
@@ -150,7 +148,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .page-title{font-family:'Playfair Display',serif;font-size:30px;color:var(--text-dark);}
 .page-time{font-size:13px;color:var(--text-mid);display:flex;align-items:center;gap:6px;}
 
-/* NOTIFICATION CARD */
 .notif-card{background:var(--card-bg);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
 .notif-header{background:var(--dark);display:flex;align-items:center;justify-content:space-between;padding:14px 20px;}
 .notif-header-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--cream);}
@@ -158,7 +155,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .mark-all-btn:hover{background:rgba(255,255,255,0.22);}
 .mark-all-btn:disabled{opacity:.55;cursor:default;}
 
-/* NOTIF ITEMS */
 .notif-list{padding:0;}
 .notif-item{display:flex;align-items:flex-start;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(0,0,0,0.07);transition:background .15s;cursor:default;animation:slideIn .3s ease both;}
 @keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
@@ -191,7 +187,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .empty-notif .empty-icon{font-size:40px;margin-bottom:12px;}
 .empty-notif p{font-size:14px;}
 
-/* TOAST POPUP */
 .toast-container{position:fixed;top:80px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none;}
 .toast-notif{background:var(--dark);color:var(--cream);border-radius:12px;padding:14px 18px;min-width:280px;max-width:340px;box-shadow:0 8px 30px rgba(0,0,0,0.4);pointer-events:all;animation:toastIn .4s ease both;border-left:4px solid var(--gold);}
 .toast-notif.toast-warning{border-left-color:#f0c040;}
@@ -203,9 +198,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 .toast-title{font-weight:700;font-size:13px;margin-bottom:4px;}
 .toast-msg{font-size:12px;color:rgba(255,255,255,0.7);}
 .toast-close{position:absolute;top:10px;right:12px;background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:16px;line-height:1;}
-/* Bell badge + popup */
-#bellBadge{position:absolute;top:5px;right:5px;background:#e07070;color:#fff;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center;pointer-events:none;z-index:20;}
-#bellPopup{display:none;position:fixed;left:76px;bottom:68px;z-index:99999;min-width:256px;max-width:310px;background:#1e1a14;color:#f5eedc;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(240,192,64,0.35);overflow:hidden;animation:fadeUp .25s ease both;}
 .bp-header{background:rgba(240,192,64,0.1);padding:11px 14px;border-bottom:1px solid rgba(240,192,64,0.2);display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .bp-title{font-size:12px;font-weight:700;color:#f0c040;display:flex;align-items:center;gap:5px;}
 .bp-close{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:18px;line-height:1;padding:0;transition:color .2s;}
@@ -361,7 +353,6 @@ body{font-family:'Lato',sans-serif;background:var(--page-bg);display:flex;flex-d
 <script>
 function toggleAvatarMenu(e){e.stopPropagation();var m=document.getElementById('avatarMenu');m.style.display=m.style.display==='none'?'block':'none';}
 document.addEventListener('click',function(){var m=document.getElementById('avatarMenu');if(m)m.style.display='none';});
-// Clock
 function updateClock(){
   const now=new Date();
   document.getElementById('liveClock').textContent=
@@ -369,8 +360,6 @@ function updateClock(){
     now.toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'});
 }
 updateClock(); setInterval(updateClock,1000);
-
-// Live countdown tick (covers both server-rendered and JS-injected cards)
 function tickCountdowns(){
   document.querySelectorAll('[id^="cd-"],[id^="live-cd-"]').forEach(el=>{
     let secs = parseInt(el.dataset.secs) - 1;
@@ -386,8 +375,6 @@ function tickCountdowns(){
   });
 }
 setInterval(tickCountdowns,1000);
-
-// ── Read-state persistence via localStorage ──
 const READ_KEY = 'bnb_notif_read';
 
 function getReadIds(){
@@ -400,7 +387,6 @@ function saveReadIds(set){
 }
 
 function getItemId(el){
-  // server-rendered: id="notif-123" or "notif-done_123"  |  live-injected: data-sid="123"
   if (el.dataset.sid) return el.dataset.sid;
   const m = (el.id || '').match(/^notif-(.+)$/);
   return m ? m[1] : null;
@@ -429,26 +415,18 @@ function markAllRead(){
     btn.disabled = true;
     setTimeout(() => { btn.textContent = 'Mark all as read'; btn.disabled = false; }, 2000);
   }
-
-  // Persist dismissed IDs — normalize to base numeric ID so done_6 and 6 are the same
   try {
     const canonId = id => String(id).replace(/^done_/, '');
     const dismissed = new Set(JSON.parse(sessionStorage.getItem('bellDismissed') || '[]'));
     read.forEach(id => dismissed.add(canonId(id)));
     sessionStorage.setItem('bellDismissed', JSON.stringify([...dismissed]));
   } catch(e) {}
-
-  // Clear both badge elements immediately
   const bellBadge = document.getElementById('bellBadge');
   if (bellBadge) bellBadge.style.display = 'none';
   const navBadge = document.querySelector('#bellNavItem .nav-badge');
   if (navBadge) navBadge.remove();
 }
-
-// Apply on first load
 applyReadState();
-
-// Hide PHP-rendered nav-badge on load if all notifications are already dismissed
 (function(){
   try {
     const dismissed = new Set(JSON.parse(sessionStorage.getItem('bellDismissed') || '[]'));
@@ -466,8 +444,6 @@ applyReadState();
     }
   } catch(e) {}
 })();
-
-// TOAST POPUP — show for warning/expired sessions
 function showToast(type, title, msg){
   const container = document.getElementById('toastContainer');
   const toast = document.createElement('div');
@@ -486,15 +462,11 @@ function dismissToast(btn){
   toast.classList.add('hiding');
   setTimeout(()=>toast.remove(),300);
 }
-
-// Auto-show toasts for urgent notifications on page load
 <?php foreach ($notifications as $n): ?>
 <?php if ($n['type'] === 'warning' || $n['type'] === 'expired'): ?>
 showToast('<?= $n['type'] ?>', '<?= addslashes($n['title']) ?>', '<?= addslashes($n['message']) ?>');
 <?php endif; ?>
 <?php endforeach; ?>
-
-// Unified poll — updates notif list, badge, popup, and toasts
 const _shownToasts = new Set();
 async function pollNotifications(){
   try {
@@ -506,10 +478,7 @@ async function pollNotifications(){
     const badge   = document.getElementById('bellBadge');
     const popup   = document.getElementById('bellPopup');
     const popItems= document.getElementById('bellPopupItems');
-
-    // ── inject / update live cards in the notif list ──
     if (list) {
-      // remove stale live cards whose session is no longer in alerts
       const activeIds = new Set(fiveMin.map(a => String(a.id)));
       list.querySelectorAll('.notif-live').forEach(el => {
         if (!activeIds.has(el.dataset.sid)) el.remove();
@@ -519,7 +488,6 @@ async function pollNotifications(){
         const sid = String(a.id);
         let card = list.querySelector(`.notif-live[data-sid="${sid}"]`);
         if (!card) {
-          // hide empty state if present
           const empty = list.querySelector('.empty-notif');
           if (empty) empty.style.display = 'none';
 
@@ -550,15 +518,11 @@ async function pollNotifications(){
           }
         }
       });
-
-      // restore empty state if nothing at all
       if (!list.querySelector('.notif-item')) {
         const empty = list.querySelector('.empty-notif');
         if (empty) empty.style.display = '';
       }
     }
-
-    // ── bell badge ──
     if (badge) {
       let dismissed = new Set();
       try { dismissed = new Set(JSON.parse(sessionStorage.getItem('bellDismissed') || '[]')); } catch(e){}
@@ -571,8 +535,6 @@ async function pollNotifications(){
         badge.style.display = 'none';
       }
     }
-
-    // ── bell popup ──
     if (popup && popItems) {
       if (fiveMin.length > 0) {
         popItems.innerHTML = fiveMin.map(a =>
@@ -598,5 +560,4 @@ window.closeBellPopup = function(){ document.getElementById('bellPopup').style.d
 </script>
 </body>
 </html>
-
 
