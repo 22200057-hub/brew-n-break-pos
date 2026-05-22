@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brew n' Break – Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark:    #1a1410;
+      --card-dark:  #1e1a16;
+      --card-right: #201c18;
+      --accent:     #e8d9b0;
+      --cream:      #f5eedc;
+      --muted:      #8a7f72;
+      --input-line: #5a5045;
+      --btn-bg:     #f0e6cc;
+      --btn-text:   #1a1410;
+      --error:      #e07070;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lato', sans-serif;
+      background: var(--bg-dark);
+      overflow: hidden;
+    }
+
+    /* Background image layer */
+    .bg {
+      position: fixed;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1400&q=80') center/cover no-repeat;
+      filter: brightness(0.35) saturate(0.7);
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      border-radius: 20px;
+      overflow: hidden;
+      width: min(760px, 95vw);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+      animation: fadeUp 0.7s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── LEFT PANEL ── */
+    .left {
+      background: rgba(20, 16, 12, 0.92);
+      backdrop-filter: blur(8px);
+      width: 42%;
+      padding: 48px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .logo-ring {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      overflow: hidden;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .logo-ring img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+
+    /* SVG badge fallback */
+    .logo-badge {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: var(--card-dark);
+      border: 2px solid var(--accent);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .logo-badge .brand-top {
+      font-family: 'Playfair Display', serif;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .logo-badge .billiard {
+      font-size: 32px;
+    }
+
+    .logo-badge .brand-bottom {
+      font-size: 7px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .socials {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .social-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 300;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .social-item:hover { color: var(--cream); }
+
+    .social-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .social-icon svg { width: 14px; height: 14px; fill: var(--accent); }
+
+    /* ── RIGHT PANEL ── */
+    .right {
+      background: rgba(28, 23, 18, 0.93);
+      backdrop-filter: blur(12px);
+      flex: 1;
+      padding: 52px 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 28px;
+    }
+
+    .right h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      color: var(--cream);
+      letter-spacing: 0.5px;
+      animation: fadeUp 0.7s 0.15s ease both;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      animation: fadeUp 0.7s 0.25s ease both;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .form-group input {
+      background: transparent;
+      border: none;
+      border-bottom: 1.5px solid var(--input-line);
+      padding: 10px 0;
+      font-size: 15px;
+      color: var(--cream);
+      font-family: 'Lato', sans-serif;
+      outline: none;
+      transition: border-color 0.25s;
+      width: 100%;
+    }
+
+    .form-group input:focus {
+      border-bottom-color: var(--accent);
+    }
+
+    .form-group input::placeholder { color: var(--muted); }
+
+    .error-msg {
+      font-size: 12px;
+      color: var(--error);
+      min-height: 16px;
+      animation: fadeUp 0.3s ease both;
+    }
+
+    .btn-login {
+      margin-top: 8px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      border-radius: 50px;
+      padding: 14px;
+      font-size: 15px;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s, transform 0.15s;
+      animation: fadeUp 0.7s 0.35s ease both;
+    }
+
+    .btn-login:hover  { background: var(--cream); transform: translateY(-1px); }
+    .btn-login:active { transform: translateY(0); }
+
+    .forgot {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s;
+      animation: fadeUp 0.7s 0.4s ease both;
+    }
+    .forgot:hover { color: var(--accent); }
+
+    /* Loading spinner on button */
+    .btn-login.loading { opacity: 0.7; pointer-events: none; }
+
+    @media (max-width: 560px) {
+      .wrapper { flex-direction: column; }
+      .left { width: 100%; padding: 32px 24px; flex-direction: row; flex-wrap: wrap; gap: 20px; }
+      .logo-ring { width: 90px; height: 90px; }
+      .right { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<div class="wrapper">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="logo-ring">
+      <img src="img/logo.png" alt="Brew n' Break Logo"/>
+    </div>
+
+    <div class="socials">
+      <a class="social-item" href="https://www.facebook.com/BrewnBreakbyBambooCourt" target="_blank" rel="noopener">
+        <div class="social-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
+          </svg>
+        </div>
+        BrewnBreakbyBambooCourt
+      </a>
+      <a class="social-item" href="https://www.instagram.com/brewnbreak.lu" target="_blank" rel="noopener">
+        <div class="social-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+          </svg>
+        </div>
+        @brewnbreak.lu
+      </a>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <h1>Brew n' Break</h1>
+
+    <form id="loginForm" novalidate>
+      <div style="display:flex;flex-direction:column;gap:22px;">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="Enter username" autocomplete="username"/>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password"/>
+        </div>
+
+        <div class="error-msg" id="errorMsg"></div>
+
+        <button type="submit" class="btn-login" id="loginBtn">Login</button>
+      </div>
+    </form>
+
+
+  </div>
+
+</div>
+
+<script>
+  const form    = document.getElementById('loginForm');
+  const errorEl = document.getElementById('errorMsg');
+  const loginBtn = document.getElementById('loginBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorEl.textContent = '';
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!username || !password) {
+      errorEl.textContent = 'Please fill in both fields.';
+      return;
+    }
+
+    loginBtn.textContent = 'Logging in…';
+    loginBtn.classList.add('loading');
+
+    try {
+      const res  = await fetch('login.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        loginBtn.textContent = '✓ Success';
+        setTimeout(() => {
+          window.location.href = data.redirect || 'dashboard.php';
+        }, 600);
+      } else {
+        errorEl.textContent = data.message || 'Invalid credentials.';
+        loginBtn.textContent = 'Login';
+        loginBtn.classList.remove('loading');
+      }
+    } catch (err) {
+      errorEl.textContent = 'Server error. Please try again.';
+      loginBtn.textContent = 'Login';
+      loginBtn.classList.remove('loading');
+    }
+  });
+</script>
+</body>
+</html>
